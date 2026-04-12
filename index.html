@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RadioMapa — Baza przemienników krótkofalowych</title>
+  <meta name="description" content="Interaktywna mapa przemienników krótkofalowych dla Polski i Europy. Pobierz aplikację na Android.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0d0f;
+      --bg2:       #0f1317;
+      --bg3:       #151b20;
+      --green:     #22c55e;
+      --green-dim: #16a34a;
+      --green-glow:#22c55e33;
+      --text:      #f0f4f8;
+      --text-sub:  #8a9bb0;
+      --text-dim:  #4a5568;
+      --border:    #1e2830;
+      --border2:   #2a3540;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ── GRID BACKGROUND ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.3;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 0%, transparent 70%);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      background: linear-gradient(to bottom, rgba(10,13,15,0.95), transparent);
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-logo {
+      font-family: 'Space Mono', monospace;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    .nav-logo span { color: var(--green); }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-sub);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--green); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      overflow: hidden;
+    }
+
+    /* Glowing orb */
+    .hero-orb {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--green-glow) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -55%);
+      pointer-events: none;
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; transform: translate(-50%, -55%) scale(1); }
+      50%       { opacity: 1;   transform: translate(-50%, -55%) scale(1.08); }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border: 1px solid var(--green-dim);
+      border-radius: 100px;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--green);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      background: rgba(34,197,94,0.06);
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    h1 {
+      font-size: clamp(52px, 9vw, 110px);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -3px;
+      margin-bottom: 8px;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    h1 .accent { color: var(--green); }
+
+    .hero-sub {
+      font-size: clamp(14px, 2vw, 18px);
+      color: var(--text-sub);
+      max-width: 480px;
+      line-height: 1.6;
+      margin: 24px auto 48px;
+      font-weight: 400;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      background: var(--green);
+      color: #000;
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: all 0.2s;
+      box-shadow: 0 0 30px var(--green-glow);
+      letter-spacing: 0.3px;
+    }
+    .btn-primary:hover {
+      background: #16a34a;
+      transform: translateY(-2px);
+      box-shadow: 0 0 50px rgba(34,197,94,0.4);
+    }
+    .btn-primary svg { width: 18px; height: 18px; }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      background: transparent;
+      color: var(--text-sub);
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 4px;
+      border: 1px solid var(--border2);
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
+    }
+    .btn-secondary:hover {
+      border-color: var(--green);
+      color: var(--green);
+      transform: translateY(-2px);
+    }
+
+    .version-info {
+      margin-top: 24px;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.5px;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+    .version-info span { color: var(--green); }
+
+    /* ── MOCKUP ── */
+    .hero-mockup {
+      position: relative;
+      margin-top: 80px;
+      width: 100%;
+      max-width: 900px;
+      animation: fadeUp 0.8s 0.5s ease both;
+    }
+
+    .mockup-frame {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px var(--border),
+        0 40px 80px rgba(0,0,0,0.6),
+        0 0 120px rgba(34,197,94,0.06);
+    }
+
+    .mockup-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg3);
+    }
+
+    .mockup-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .mockup-dot:nth-child(1) { background: #ff5f57; }
+    .mockup-dot:nth-child(2) { background: #ffbd2e; }
+    .mockup-dot:nth-child(3) { background: #28c840; }
+
+    .mockup-title {
+      margin-left: 8px;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .mockup-map {
+      height: 360px;
+      background:
+        radial-gradient(circle at 30% 40%, rgba(34,197,94,0.08) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(34,197,94,0.05) 0%, transparent 40%),
+        linear-gradient(135deg, #0f1a14 0%, #0a1118 50%, #0d1a10 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Animated map dots */
+    .map-dot {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green);
+      animation: mapPulse 3s ease-in-out infinite;
+    }
+
+    .map-dot::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1px solid var(--green);
+      opacity: 0.4;
+      animation: ripple 3s ease-in-out infinite;
+    }
+
+    @keyframes mapPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50%       { transform: scale(1.2); opacity: 0.8; }
+    }
+
+    @keyframes ripple {
+      0%   { transform: scale(1); opacity: 0.4; }
+      100% { transform: scale(3); opacity: 0; }
+    }
+
+    .map-line {
+      position: absolute;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(34,197,94,0.3), transparent);
+      animation: scanline 4s linear infinite;
+    }
+
+    @keyframes scanline {
+      0%   { top: 0; opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    /* Map grid lines */
+    .mockup-map::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(34,197,94,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,197,94,0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .map-overlay-text {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: rgba(34,197,94,0.5);
+      line-height: 1.8;
+    }
+
+    /* ── STATS ── */
+    .stats {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin: 0;
+    }
+
+    .stat {
+      background: var(--bg);
+      padding: 48px 40px;
+      text-align: center;
+      transition: background 0.3s;
+    }
+    .stat:hover { background: var(--bg2); }
+
+    .stat-number {
+      font-size: 52px;
+      font-weight: 800;
+      color: var(--green);
+      line-height: 1;
+      font-family: 'Space Mono', monospace;
+      letter-spacing: -2px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-sub);
+      margin-top: 8px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* ── FEATURES ── */
+    .features {
+      position: relative;
+      z-index: 1;
+      padding: 100px 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--green);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1.1;
+      margin-bottom: 64px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .feature {
+      background: var(--bg);
+      padding: 40px 36px;
+      transition: background 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature:hover { background: var(--bg2); }
+    .feature:hover .feature-icon { color: var(--green); }
+
+    .feature::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--green);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .feature:hover::before { transform: scaleX(1); }
+
+    .feature-icon {
+      font-size: 28px;
+      margin-bottom: 20px;
+      transition: color 0.3s;
+      display: block;
+    }
+
+    .feature-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .feature-desc {
+      font-size: 14px;
+      color: var(--text-sub);
+      line-height: 1.7;
+      font-weight: 400;
+    }
+
+    /* ── CHANGELOG ── */
+    .changelog {
+      position: relative;
+      z-index: 1;
+      padding: 80px 40px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .changelog-entry {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 32px;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+    .changelog-entry:last-child { border-bottom: none; }
+
+    .changelog-version {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      color: var(--green);
+      font-weight: 700;
+      padding-top: 4px;
+    }
+
+    .changelog-date {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    .changelog-items {
+      list-style: none;
+    }
+
+    .changelog-items li {
+      font-size: 14px;
+      color: var(--text-sub);
+      padding: 6px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.5;
+    }
+
+    .changelog-items li::before {
+      content: '→';
+      color: var(--green);
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── INSTALL ── */
+    .install {
+      position: relative;
+      z-index: 1;
+      padding: 80px 40px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .install-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 48px;
+    }
+
+    .install-step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 24px;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+    .install-step:last-child { border-bottom: none; }
+
+    .step-num {
+      width: 48px; height: 48px;
+      border: 1px solid var(--border2);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--green);
+      flex-shrink: 0;
+      background: rgba(34,197,94,0.05);
+    }
+
+    .step-content h4 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+    }
+
+    .step-content p {
+      font-size: 14px;
+      color: var(--text-sub);
+      line-height: 1.6;
+    }
+
+    .step-content code {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      padding: 2px 8px;
+      border-radius: 3px;
+      color: var(--green);
+    }
+
+    /* ── CTA ── */
+    .cta {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 100px 40px;
+      border-top: 1px solid var(--border);
+    }
+
+    .cta h2 {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+      line-height: 1.1;
+    }
+
+    .cta p {
+      color: var(--text-sub);
+      font-size: 16px;
+      margin-bottom: 40px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 32px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-family: 'Space Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .footer-logo span { color: var(--green); }
+
+    .footer-text {
+      font-size: 12px;
+      color: var(--text-dim);
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 16px 20px; }
+      .nav-links { display: none; }
+      .stats { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .changelog-entry { grid-template-columns: 1fr; gap: 8px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; }
+      .features, .changelog, .install { padding: 60px 20px; }
+      .cta { padding: 60px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Radio<span>Mapa</span></div>
+    <ul class="nav-links">
+      <li><a href="#features">Funkcje</a></li>
+      <li><a href="#install">Instalacja</a></li>
+      <li><a href="#download">Pobierz</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-orb"></div>
+
+    <div class="hero-badge">v1.0.0 · Dostępna teraz</div>
+
+    <h1>Radio<span class="accent">Mapa</span></h1>
+
+    <p class="hero-sub">
+      Interaktywna mapa przemienników krótkofalowych dla Polski i Europy.
+      Znajdź najbliższy przemiennik, sprawdź parametry, dodaj do ulubionych.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#download" class="btn-primary">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z"/>
+        </svg>
+        Pobierz APK
+      </a>
+      <a href="#features" class="btn-secondary">
+        Zobacz funkcje →
+      </a>
+    </div>
+
+    <div class="version-info">
+      Wersja <span>1.0.0</span> · Android 8.0+ · Darmowa · Bez reklam
+    </div>
+
+  </section>
+
+  <!-- STATS -->
+  <div class="stats reveal">
+    <div class="stat">
+      <div class="stat-number">2224</div>
+      <div class="stat-label">Przemienników</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">37</div>
+      <div class="stat-label">Krajów</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">100%</div>
+      <div class="stat-label">Darmowa</div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="section-label reveal">// funkcje</div>
+    <h2 class="section-title reveal">Wszystko czego<br>potrzebujesz w terenie</h2>
+
+    <div class="features-grid">
+      <div class="feature reveal">
+        <span class="feature-icon">🗺️</span>
+        <div class="feature-title">Interaktywna mapa</div>
+        <p class="feature-desc">Przemienniki na mapie z grupowaniem, kolorowaniem według trybu pracy i podglądem szczegółów po tapnięciu.</p>
+      </div>
+      <div class="feature reveal">
+        <span class="feature-icon">📡</span>
+        <div class="feature-title">Pełne dane techniczne</div>
+        <p class="feature-desc">TX/RX, CTCSS, Color Code, lokator, tryb pracy, status. Wszystkie parametry w jednym miejscu.</p>
+      </div>
+      <div class="feature reveal">
+        <span class="feature-icon">📍</span>
+        <div class="feature-title">Lokalizacja GPS</div>
+        <p class="feature-desc">Dystans do przemiennika, linia na mapie, automatyczne centrowanie na Twojej pozycji.</p>
+      </div>
+      <div class="feature reveal">
+        <span class="feature-icon">⭐</span>
+        <div class="feature-title">Ulubione</div>
+        <p class="feature-desc">Zapisz najczęściej używane przemienniki. Dane zachowywane lokalnie, przeżywają aktualizacje.</p>
+      </div>
+      <div class="feature reveal">
+        <span class="feature-icon">🔍</span>
+        <div class="feature-title">Filtry i wyszukiwanie</div>
+        <p class="feature-desc">Filtruj po trybie, paśmie, kraju, statusie. Znajdź dokładnie to czego szukasz.</p>
+      </div>
+      <div class="feature reveal">
+        <span class="feature-icon">💾</span>
+        <div class="feature-title">Export CHIRP</div>
+        <p class="feature-desc">Eksportuj przemienniki bezpośrednio do formatu CHIRP i programuj radio jednym kliknięciem.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTALL -->
+  <section class="install" id="install">
+    <div class="section-label reveal">// instalacja</div>
+    <h2 class="section-title reveal">Jak zainstalować<br>na Android?</h2>
+
+    <div class="install-steps">
+      <div class="install-step reveal">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <h4>Pobierz plik APK</h4>
+          <p>Kliknij przycisk "Pobierz APK" poniżej i zapisz plik na swoim urządzeniu.</p>
+        </div>
+      </div>
+      <div class="install-step reveal">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <h4>Zezwól na instalację</h4>
+          <p>Przy pierwszej instalacji Android zapyta o zgodę na instalację z <code>nieznanych źródeł</code>. Zatwierdź jednorazowo.</p>
+        </div>
+      </div>
+      <div class="install-step reveal">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <h4>Zainstaluj i uruchom</h4>
+          <p>Kliknij pobrany plik APK i potwierdź instalację. Przy aktualizacji <strong>nie odinstalowuj</strong> starej wersji — dane zostaną zachowane.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Radio<span>Mapa</span></div>
+    <div class="footer-text">© 2025 radiomapa.pl · Dla krótkofalowców</div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
