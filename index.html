@@ -665,14 +665,47 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
+      /* Nav */
       nav { padding: 16px 20px; }
       .nav-links { display: none; }
+
+      /* Hero */
+      .hero { padding: 100px 20px 60px; min-height: auto; }
+      .hero-orb { width: 300px; height: 300px; }
+      h1 { font-size: clamp(48px, 15vw, 80px); letter-spacing: -2px; }
+      .hero-sub { font-size: 15px; margin: 16px auto 32px; }
+      .hero-actions { flex-direction: column; align-items: center; gap: 12px; }
+      .btn-primary, .btn-secondary { width: 100%; max-width: 320px; justify-content: center; padding: 14px 24px; }
+      .version-info { font-size: 10px; }
+
+      /* Stats */
       .stats { grid-template-columns: 1fr; }
+      .stat { padding: 32px 24px; }
+      .stat-number { font-size: 40px; }
+
+      /* Features */
+      .features { padding: 60px 20px; }
+      .section-title { font-size: clamp(28px, 8vw, 40px); letter-spacing: -1px; margin-bottom: 40px; }
       .features-grid { grid-template-columns: 1fr; }
+      .feature { padding: 28px 24px; }
+
+      /* Install */
+      .install { padding: 60px 20px; }
+      .install-steps { margin-top: 32px; }
+      .install-step { gap: 16px; padding: 20px 0; }
+      .step-num { width: 40px; height: 40px; font-size: 12px; }
+      .step-content h4 { font-size: 15px; }
+
+      /* Footer */
+      footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px 20px; }
+
+      /* Changelog */
       .changelog-entry { grid-template-columns: 1fr; gap: 8px; }
-      footer { flex-direction: column; gap: 12px; text-align: center; }
-      .features, .changelog, .install { padding: 60px 20px; }
-      .cta { padding: 60px 20px; }
+    }
+
+    @media (max-width: 400px) {
+      h1 { font-size: 42px; }
+      .stat-number { font-size: 36px; }
     }
   </style>
 </head>
