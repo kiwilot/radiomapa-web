@@ -98,13 +98,13 @@
     .hero {
       position: relative;
       z-index: 1;
-      min-height: 100vh;
+      min-height: auto;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 120px 24px 80px;
+      padding: 140px 24px 60px;
       overflow: hidden;
     }
 
@@ -240,7 +240,6 @@
     }
     .version-info span { color: var(--green); }
 
-    /* ── TESTER BOX ── */
     .tester-box {
       position: relative;
       z-index: 1;
@@ -256,7 +255,7 @@
     .tester-box h3 {
       font-size: 22px;
       font-weight: 700;
-      margin-bottom: 12px;
+      margin-bottom: 20px;
       letter-spacing: -0.5px;
     }
 
@@ -264,64 +263,9 @@
       font-size: 14px;
       color: var(--text-sub);
       line-height: 1.7;
-      margin-bottom: 28px;
+      margin-bottom: 0;
     }
 
-    .tester-links {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 24px;
-    }
-
-    .tester-form {
-      display: flex;
-      gap: 10px;
-      max-width: 420px;
-      margin: 0 auto;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .tester-form input {
-      flex: 1;
-      min-width: 200px;
-      padding: 12px 16px;
-      background: var(--bg3);
-      border: 1px solid var(--border2);
-      border-radius: 4px;
-      color: var(--text);
-      font-family: 'Space Mono', monospace;
-      font-size: 13px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .tester-form input:focus { border-color: var(--green); }
-    .tester-form input::placeholder { color: var(--text-dim); }
-
-    .tester-form button {
-      padding: 12px 24px;
-      background: var(--green);
-      color: #000;
-      border: none;
-      border-radius: 4px;
-      font-family: 'Syne', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .tester-form button:hover { background: var(--green-dim); transform: translateY(-1px); }
-
-    .tester-note {
-      margin-top: 16px;
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      color: var(--text-dim);
-    }
-
-    /* ── STATS ── */
     .stats {
       position: relative;
       z-index: 1;
@@ -331,7 +275,7 @@
       background: var(--border);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      margin: 80px 0 0;
+      margin: 20px 0 0;
     }
 
     .stat {
@@ -436,7 +380,6 @@
       font-weight: 400;
     }
 
-    /* ── CHANGELOG ── */
     .changelog {
       position: relative;
       z-index: 1;
@@ -499,79 +442,6 @@
       margin: 0 auto;
     }
 
-    .install-steps {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      margin-top: 48px;
-    }
-
-    .install-step {
-      display: grid;
-      grid-template-columns: 48px 1fr;
-      gap: 24px;
-      padding: 28px 0;
-      border-bottom: 1px solid var(--border);
-      align-items: start;
-    }
-    .install-step:last-child { border-bottom: none; }
-
-    .step-num {
-      width: 48px; height: 48px;
-      border: 1px solid var(--border2);
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Space Mono', monospace;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--green);
-      flex-shrink: 0;
-      background: rgba(34,197,94,0.05);
-    }
-
-    .step-content h4 {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      letter-spacing: -0.3px;
-    }
-
-    .step-content p {
-      font-size: 14px;
-      color: var(--text-sub);
-      line-height: 1.6;
-    }
-
-    .step-content a {
-      color: var(--green);
-      text-decoration: none;
-    }
-    .step-content a:hover { text-decoration: underline; }
-
-    .cta {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 100px 40px;
-      border-top: 1px solid var(--border);
-    }
-
-    .cta h2 {
-      font-size: clamp(36px, 5vw, 64px);
-      font-weight: 800;
-      letter-spacing: -2px;
-      margin-bottom: 24px;
-      line-height: 1.1;
-    }
-
-    .cta p {
-      color: var(--text-sub);
-      font-size: 16px;
-      margin-bottom: 40px;
-    }
-
     footer {
       position: relative;
       z-index: 1;
@@ -613,7 +483,7 @@
     @media (max-width: 768px) {
       nav { padding: 16px 20px; }
       .nav-links { display: none; }
-      .hero { padding: 100px 20px 60px; min-height: auto; }
+      .hero { padding: 100px 20px 40px; }
       .hero-orb { width: 300px; height: 300px; }
       h1 { font-size: 38px !important; letter-spacing: -1px; padding: 0 16px; }
       .hero-sub { font-size: 15px; margin: 16px auto 32px; }
@@ -621,8 +491,7 @@
       .btn-primary, .btn-secondary { width: 100%; max-width: 320px; justify-content: center; padding: 14px 24px; }
       .version-info { font-size: 10px; }
       .tester-box { padding: 28px 20px; margin: 0 20px; }
-      .tester-links { flex-direction: column; align-items: center; }
-      .stats { grid-template-columns: 1fr; margin-top: 40px; }
+      .stats { grid-template-columns: 1fr; margin-top: 20px; }
       .stat { padding: 32px 24px; }
       .stat-number { font-size: 40px; }
       .features { padding: 60px 20px; }
@@ -630,10 +499,6 @@
       .features-grid { grid-template-columns: 1fr; }
       .feature { padding: 28px 24px; }
       .install { padding: 60px 20px; }
-      .install-steps { margin-top: 32px; }
-      .install-step { gap: 16px; padding: 20px 0; }
-      .step-num { width: 40px; height: 40px; font-size: 12px; }
-      .step-content h4 { font-size: 15px; }
       footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px 20px; }
       .changelog-entry { grid-template-columns: 1fr; gap: 8px; }
     }
@@ -652,23 +517,18 @@
     <ul class="nav-links">
       <li><a href="#features">Funkcje</a></li>
       <li><a href="#testy">Testy</a></li>
-      
     </ul>
   </nav>
 
   <!-- HERO -->
   <section class="hero">
     <div class="hero-orb"></div>
-
     <div class="hero-badge">Beta · Testy otwarte</div>
-
     <h1>Radio<span class="accent">Mapa</span></h1>
-
     <p class="hero-sub">
       Interaktywna mapa przemienników krótkofalowych dla Polski i Europy.
       Ogłoszenia aktywności w czasie rzeczywistym dla FM, DMR, CB, PMR i więcej.
     </p>
-
     <div class="hero-actions">
       <a href="https://play.google.com/store/apps/details?id=pl.radiomapa.app" class="btn-primary">
         <svg viewBox="0 0 24 24" fill="currentColor">
@@ -680,33 +540,20 @@
         Dołącz do testów →
       </a>
     </div>
-
     <div class="version-info">
       Wersja <span>1.1.0</span> · Android 8.0+ · Darmowa · Bez reklam
     </div>
   </section>
-  
-<!-- TESTY -->
+
+  <!-- TESTY -->
   <section class="install" id="testy" style="padding: 20px 40px;">
     <div class="tester-box reveal" style="margin: 0 auto;">
       <h3>📻 Szukamy testerów!</h3>
-      <div class="tester-links">
-        <a href="https://play.google.com/store/apps/details?id=pl.radiomapa.app" class="btn-primary" style="font-size:13px; padding: 12px 24px;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3.18 23.76c.3.17.64.22.97.15l13.2-7.62-2.83-2.83-11.34 10.3zm-1.9-20.7C1.1 3.33 1 3.67 1 4.04v15.92c0 .37.1.71.28 1l11.05-11.05L1.28 3.06zM20.55 9.77l-2.8-1.62-3.14 3.14 3.14 3.14 2.83-1.63c.8-.46.8-1.57-.03-2.03zM4.15.09L17.35 7.7l-2.83 2.83L3.18.23C3.5.16 3.85.21 4.15.38z"/>
-          </svg>
-          Dołącz na telefonie
-        </a>
-        <a href="https://play.google.com/apps/testing/pl.radiomapa.app" class="btn-secondary" style="font-size:13px; padding: 12px 24px;">
-          Dołącz przez przeglądarkę →
-        </a>
-      </div>
-      <p style="margin-top:24px; margin-bottom:0;">
-        RadioMapa jest w fazie testów zamkniętych na Google Play. Chcesz jako jeden z pierwszych przetestować aplikację i mieć wpływ na jej rozwój? Napisz na <a href="mailto:dev.spontanik@gmail.com" style="color:var(--green);">dev.spontanik@gmail.com</a> podając swój adres Gmail konta Google. Ręcznie dodam Cię do listy testerów — może to potrwać do 24h. Po dodaniu wróć na tę stronę i kliknij jeden z przycisków powyżej. Jeśli aplikacja nie pojawia się w Google Play oznacza to że jeszcze nie zostałeś dodany — sprawdź ponownie za jakiś czas. 😊
+      <p>
+        RadioMapa jest w fazie testów zamkniętych na Google Play. Chcesz jako jeden z pierwszych przetestować aplikację i mieć wpływ na jej rozwój? Napisz na <a href="mailto:dev.spontanik@gmail.com" style="color:var(--green);">dev.spontanik@gmail.com</a> podając swój adres Gmail konta Google. Ręcznie dodam Cię do listy testerów — może to potrwać do 24h. Po dodaniu wróć na tę stronę i kliknij przycisk <strong style="color:var(--green);">Google Play</strong> powyżej. Jeśli aplikacja nie pojawia się w Google Play oznacza to że jeszcze nie zostałeś dodany — sprawdź ponownie za jakiś czas. 😊
       </p>
     </div>
   </section>
-
 
   <!-- STATS -->
   <div class="stats reveal" style="margin-top: 20px;">
@@ -728,7 +575,6 @@
   <section class="features" id="features">
     <div class="section-label reveal">// funkcje</div>
     <h2 class="section-title reveal">Wszystko czego<br>potrzebujesz w terenie</h2>
-
     <div class="features-grid">
       <div class="feature reveal">
         <span class="feature-icon">🗺️</span>
@@ -763,13 +609,10 @@
     </div>
   </section>
 
-  
-
   <!-- CHANGELOG -->
   <section class="changelog" id="changelog">
     <div class="section-label reveal">// changelog</div>
     <h2 class="section-title reveal">Historia<br>wersji</h2>
-
     <div class="changelog-entry reveal">
       <div>
         <div class="changelog-version">v1.1.0</div>
@@ -784,7 +627,6 @@
         <li>Poprawki błędów i ulepszenia</li>
       </ul>
     </div>
-
     <div class="changelog-entry reveal">
       <div>
         <div class="changelog-version">v1.0.0</div>
@@ -800,8 +642,6 @@
       </ul>
     </div>
   </section>
-
-  
 
   <!-- FOOTER -->
   <footer>
