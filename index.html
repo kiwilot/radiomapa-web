@@ -35,7 +35,6 @@
       cursor: default;
     }
 
-    /* ── NOISE OVERLAY ── */
     body::before {
       content: '';
       position: fixed;
@@ -46,7 +45,6 @@
       opacity: 0.4;
     }
 
-    /* ── GRID BACKGROUND ── */
     body::after {
       content: '';
       position: fixed;
@@ -61,7 +59,6 @@
       mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 0%, transparent 70%);
     }
 
-    /* ── NAV ── */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -98,7 +95,6 @@
     }
     .nav-links a:hover { color: var(--green); }
 
-    /* ── HERO ── */
     .hero {
       position: relative;
       z-index: 1;
@@ -112,7 +108,6 @@
       overflow: hidden;
     }
 
-    /* Glowing orb */
     .hero-orb {
       position: absolute;
       width: 600px;
@@ -245,122 +240,85 @@
     }
     .version-info span { color: var(--green); }
 
-    /* ── MOCKUP ── */
-    .hero-mockup {
+    /* ── TESTER BOX ── */
+    .tester-box {
       position: relative;
-      margin-top: 80px;
-      width: 100%;
-      max-width: 900px;
-      animation: fadeUp 0.8s 0.5s ease both;
-    }
-
-    .mockup-frame {
+      z-index: 1;
+      margin: 0 auto;
+      max-width: 700px;
+      padding: 40px;
       background: var(--bg2);
       border: 1px solid var(--border2);
       border-radius: 12px;
-      overflow: hidden;
-      box-shadow:
-        0 0 0 1px var(--border),
-        0 40px 80px rgba(0,0,0,0.6),
-        0 0 120px rgba(34,197,94,0.06);
+      text-align: center;
     }
 
-    .mockup-bar {
+    .tester-box h3 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .tester-box p {
+      font-size: 14px;
+      color: var(--text-sub);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    .tester-links {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--border);
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .tester-form {
+      display: flex;
+      gap: 10px;
+      max-width: 420px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .tester-form input {
+      flex: 1;
+      min-width: 200px;
+      padding: 12px 16px;
       background: var(--bg3);
-    }
-
-    .mockup-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-    }
-    .mockup-dot:nth-child(1) { background: #ff5f57; }
-    .mockup-dot:nth-child(2) { background: #ffbd2e; }
-    .mockup-dot:nth-child(3) { background: #28c840; }
-
-    .mockup-title {
-      margin-left: 8px;
+      border: 1px solid var(--border2);
+      border-radius: 4px;
+      color: var(--text);
       font-family: 'Space Mono', monospace;
-      font-size: 11px;
-      color: var(--text-dim);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
     }
+    .tester-form input:focus { border-color: var(--green); }
+    .tester-form input::placeholder { color: var(--text-dim); }
 
-    .mockup-map {
-      height: 360px;
-      background:
-        radial-gradient(circle at 30% 40%, rgba(34,197,94,0.08) 0%, transparent 50%),
-        radial-gradient(circle at 70% 60%, rgba(34,197,94,0.05) 0%, transparent 40%),
-        linear-gradient(135deg, #0f1a14 0%, #0a1118 50%, #0d1a10 100%);
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Animated map dots */
-    .map-dot {
-      position: absolute;
-      border-radius: 50%;
+    .tester-form button {
+      padding: 12px 24px;
       background: var(--green);
-      box-shadow: 0 0 10px var(--green);
-      animation: mapPulse 3s ease-in-out infinite;
+      color: #000;
+      border: none;
+      border-radius: 4px;
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
     }
+    .tester-form button:hover { background: var(--green-dim); transform: translateY(-1px); }
 
-    .map-dot::after {
-      content: '';
-      position: absolute;
-      inset: -4px;
-      border-radius: 50%;
-      border: 1px solid var(--green);
-      opacity: 0.4;
-      animation: ripple 3s ease-in-out infinite;
-    }
-
-    @keyframes mapPulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50%       { transform: scale(1.2); opacity: 0.8; }
-    }
-
-    @keyframes ripple {
-      0%   { transform: scale(1); opacity: 0.4; }
-      100% { transform: scale(3); opacity: 0; }
-    }
-
-    .map-line {
-      position: absolute;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(34,197,94,0.3), transparent);
-      animation: scanline 4s linear infinite;
-    }
-
-    @keyframes scanline {
-      0%   { top: 0; opacity: 0; }
-      10%  { opacity: 1; }
-      90%  { opacity: 1; }
-      100% { top: 100%; opacity: 0; }
-    }
-
-    /* Map grid lines */
-    .mockup-map::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(34,197,94,0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(34,197,94,0.05) 1px, transparent 1px);
-      background-size: 40px 40px;
-    }
-
-    .map-overlay-text {
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
+    .tester-note {
+      margin-top: 16px;
       font-family: 'Space Mono', monospace;
       font-size: 10px;
-      color: rgba(34,197,94,0.5);
-      line-height: 1.8;
+      color: var(--text-dim);
     }
 
     /* ── STATS ── */
@@ -373,7 +331,7 @@
       background: var(--border);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      margin: 0;
+      margin: 80px 0 0;
     }
 
     .stat {
@@ -402,7 +360,6 @@
       text-transform: uppercase;
     }
 
-    /* ── FEATURES ── */
     .features {
       position: relative;
       z-index: 1;
@@ -513,9 +470,7 @@
       margin-top: 4px;
     }
 
-    .changelog-items {
-      list-style: none;
-    }
+    .changelog-items { list-style: none; }
 
     .changelog-items li {
       font-size: 14px;
@@ -536,7 +491,6 @@
       margin-top: 1px;
     }
 
-    /* ── INSTALL ── */
     .install {
       position: relative;
       z-index: 1;
@@ -590,19 +544,12 @@
       line-height: 1.6;
     }
 
-    .step-content code {
-      font-family: 'Space Mono', monospace;
-      font-size: 12px;
-      background: var(--bg3);
-      border: 1px solid var(--border2);
-      padding: 2px 6px;
-      border-radius: 3px;
+    .step-content a {
       color: var(--green);
-      white-space: nowrap;
-      display: inline;
+      text-decoration: none;
     }
+    .step-content a:hover { text-decoration: underline; }
 
-    /* ── CTA ── */
     .cta {
       position: relative;
       z-index: 1;
@@ -625,7 +572,6 @@
       margin-bottom: 40px;
     }
 
-    /* ── FOOTER ── */
     footer {
       position: relative;
       z-index: 1;
@@ -649,7 +595,6 @@
       font-family: 'Space Mono', monospace;
     }
 
-    /* ── ANIMATIONS ── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(24px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -665,13 +610,9 @@
       transform: translateY(0);
     }
 
-    /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
-      /* Nav */
       nav { padding: 16px 20px; }
       .nav-links { display: none; }
-
-      /* Hero */
       .hero { padding: 100px 20px 60px; min-height: auto; }
       .hero-orb { width: 300px; height: 300px; }
       h1 { font-size: 38px !important; letter-spacing: -1px; padding: 0 16px; }
@@ -679,29 +620,21 @@
       .hero-actions { flex-direction: column; align-items: center; gap: 12px; }
       .btn-primary, .btn-secondary { width: 100%; max-width: 320px; justify-content: center; padding: 14px 24px; }
       .version-info { font-size: 10px; }
-
-      /* Stats */
-      .stats { grid-template-columns: 1fr; }
+      .tester-box { padding: 28px 20px; margin: 0 20px; }
+      .tester-links { flex-direction: column; align-items: center; }
+      .stats { grid-template-columns: 1fr; margin-top: 40px; }
       .stat { padding: 32px 24px; }
       .stat-number { font-size: 40px; }
-
-      /* Features */
       .features { padding: 60px 20px; }
       .section-title { font-size: clamp(28px, 8vw, 40px); letter-spacing: -1px; margin-bottom: 40px; }
       .features-grid { grid-template-columns: 1fr; }
       .feature { padding: 28px 24px; }
-
-      /* Install */
       .install { padding: 60px 20px; }
       .install-steps { margin-top: 32px; }
       .install-step { gap: 16px; padding: 20px 0; }
       .step-num { width: 40px; height: 40px; font-size: 12px; }
       .step-content h4 { font-size: 15px; }
-
-      /* Footer */
       footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px 20px; }
-
-      /* Changelog */
       .changelog-entry { grid-template-columns: 1fr; gap: 8px; }
     }
 
@@ -718,6 +651,7 @@
     <div class="nav-logo">Radio<span>Mapa</span></div>
     <ul class="nav-links">
       <li><a href="#features">Funkcje</a></li>
+      <li><a href="#testy">Testy</a></li>
       <li><a href="#install">Instalacja</a></li>
     </ul>
   </nav>
@@ -726,29 +660,30 @@
   <section class="hero">
     <div class="hero-orb"></div>
 
+    <div class="hero-badge">Beta · Testy otwarte</div>
+
     <h1>Radio<span class="accent">Mapa</span></h1>
 
     <p class="hero-sub">
       Interaktywna mapa przemienników krótkofalowych dla Polski i Europy.
-      Znajdź najbliższy przemiennik, sprawdź parametry, dodaj do ulubionych.
+      Ogłoszenia aktywności w czasie rzeczywistym dla FM, DMR, CB, PMR i więcej.
     </p>
 
     <div class="hero-actions">
-      <a href="https://github.com/kiwilot/radiomapa-web/releases/download/v1.0.0/RadioMapa_1.0.0.apk" class="btn-primary">
+      <a href="https://play.google.com/store/apps/details?id=pl.radiomapa.app" class="btn-primary">
         <svg viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z"/>
+          <path d="M3.18 23.76c.3.17.64.22.97.15l13.2-7.62-2.83-2.83-11.34 10.3zm-1.9-20.7C1.1 3.33 1 3.67 1 4.04v15.92c0 .37.1.71.28 1l11.05-11.05L1.28 3.06zM20.55 9.77l-2.8-1.62-3.14 3.14 3.14 3.14 2.83-1.63c.8-.46.8-1.57-.03-2.03zM4.15.09L17.35 7.7l-2.83 2.83L3.18.23C3.5.16 3.85.21 4.15.38z"/>
         </svg>
-        Pobierz APK
+        Google Play
       </a>
-      <a href="#features" class="btn-secondary">
-        Zobacz funkcje →
+      <a href="#testy" class="btn-secondary">
+        Dołącz do testów →
       </a>
     </div>
 
     <div class="version-info">
-      Wersja <span>1.0.0</span> · Android 8.0+ · Darmowa · Bez reklam
+      Wersja <span>1.1.0</span> · Android 8.0+ · Darmowa · Bez reklam
     </div>
-
   </section>
 
   <!-- STATS -->
@@ -758,7 +693,7 @@
       <div class="stat-label">Przemienników</div>
     </div>
     <div class="stat">
-      <div class="stat-number">37</div>
+      <div class="stat-number">175+</div>
       <div class="stat-label">Krajów</div>
     </div>
     <div class="stat">
@@ -779,73 +714,131 @@
         <p class="feature-desc">Przemienniki na mapie z grupowaniem, kolorowaniem według trybu pracy i podglądem szczegółów po tapnięciu.</p>
       </div>
       <div class="feature reveal">
+        <span class="feature-icon">📢</span>
+        <div class="feature-title">Ogłoszenia aktywności</div>
+        <p class="feature-desc">Ogłoś że jesteś na częstotliwości — FM, DMR, C4FM, D-STAR, CB, PMR i więcej. Wszyscy w jednym miejscu, w czasie rzeczywistym.</p>
+      </div>
+      <div class="feature reveal">
         <span class="feature-icon">📡</span>
         <div class="feature-title">Pełne dane techniczne</div>
-        <p class="feature-desc">TX/RX, CTCSS, Color Code, lokator, tryb pracy, status. Wszystkie parametry w jednym miejscu.</p>
+        <p class="feature-desc">TX/RX, CTCSS, Color Code, Timeslot, moduł D-STAR, lokator, tryb pracy, status. Wszystkie parametry w jednym miejscu.</p>
       </div>
       <div class="feature reveal">
         <span class="feature-icon">📍</span>
         <div class="feature-title">Lokalizacja GPS</div>
-        <p class="feature-desc">Dystans do przemiennika, linia na mapie, automatyczne centrowanie na Twojej pozycji.</p>
-      </div>
-      <div class="feature reveal">
-        <span class="feature-icon">⭐</span>
-        <div class="feature-title">Ulubione</div>
-        <p class="feature-desc">Zapisz najczęściej używane przemienniki. Dane zachowywane lokalnie, przeżywają aktualizacje.</p>
+        <p class="feature-desc">Dystans do przemiennika, automatyczne centrowanie na Twojej pozycji. Sortowanie listy według odległości.</p>
       </div>
       <div class="feature reveal">
         <span class="feature-icon">🔍</span>
         <div class="feature-title">Filtry i wyszukiwanie</div>
-        <p class="feature-desc">Filtruj po trybie, paśmie, kraju, statusie. Znajdź dokładnie to czego szukasz.</p>
+        <p class="feature-desc">Filtruj po trybie, paśmie (2m, 70cm, 23cm), kraju, statusie. Znajdź dokładnie to czego szukasz.</p>
       </div>
       <div class="feature reveal">
-        <span class="feature-icon">💾</span>
-        <div class="feature-title">Export CHIRP</div>
-        <p class="feature-desc">Eksportuj przemienniki bezpośrednio do formatu CHIRP i programuj radio jednym kliknięciem.</p>
+        <span class="feature-icon">⭐</span>
+        <div class="feature-title">Ulubione i CHIRP</div>
+        <p class="feature-desc">Zapisz najczęściej używane przemienniki i eksportuj je do formatu CHIRP — programuj radio jednym kliknięciem.</p>
       </div>
+    </div>
+  </section>
+
+  <!-- TESTY -->
+  <section class="install" id="testy">
+    <div class="section-label reveal">// testy</div>
+    <h2 class="section-title reveal">Dołącz do testów<br>i pomóż rozwijać apkę</h2>
+
+    <div class="tester-box reveal">
+      <h3>📻 Szukamy testerów!</h3>
+      <p>
+        RadioMapa jest w fazie testów zamkniętych na Google Play. Chcesz jako jeden z pierwszych przetestować aplikację i mieć wpływ na jej rozwój? Dołącz do programu testów!
+      </p>
+      <div class="tester-links">
+        <a href="https://play.google.com/store/apps/details?id=pl.radiomapa.app" class="btn-primary" style="font-size:13px; padding: 12px 24px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3.18 23.76c.3.17.64.22.97.15l13.2-7.62-2.83-2.83-11.34 10.3zm-1.9-20.7C1.1 3.33 1 3.67 1 4.04v15.92c0 .37.1.71.28 1l11.05-11.05L1.28 3.06zM20.55 9.77l-2.8-1.62-3.14 3.14 3.14 3.14 2.83-1.63c.8-.46.8-1.57-.03-2.03zM4.15.09L17.35 7.7l-2.83 2.83L3.18.23C3.5.16 3.85.21 4.15.38z"/>
+          </svg>
+          Dołącz na telefonie
+        </a>
+        <a href="https://play.google.com/apps/testing/pl.radiomapa.app" class="btn-secondary" style="font-size:13px; padding: 12px 24px;">
+          Dołącz przez przeglądarkę →
+        </a>
+      </div>
+      <div class="tester-note">Po dołączeniu do testów aplikacja pojawi się w Google Play i będzie aktualizowana automatycznie.</div>
+    </div>
+  </section>
+
+  <!-- CHANGELOG -->
+  <section class="changelog" id="changelog">
+    <div class="section-label reveal">// changelog</div>
+    <h2 class="section-title reveal">Historia<br>wersji</h2>
+
+    <div class="changelog-entry reveal">
+      <div>
+        <div class="changelog-version">v1.1.0</div>
+        <div class="changelog-date">kwiecień 2026</div>
+      </div>
+      <ul class="changelog-items">
+        <li>Dodano obsługę timeslotów DMR (TS1/TS2)</li>
+        <li>Dodano moduł i gateway dla D-STAR</li>
+        <li>Dodano WiRES-X Room ID dla C4FM</li>
+        <li>Filtry pasm 2m, 70cm, 23cm na ekranie "Na fali"</li>
+        <li>Badge z pasmem wyliczany automatycznie z częstotliwości</li>
+        <li>Poprawki błędów i ulepszenia</li>
+      </ul>
+    </div>
+
+    <div class="changelog-entry reveal">
+      <div>
+        <div class="changelog-version">v1.0.0</div>
+        <div class="changelog-date">kwiecień 2026</div>
+      </div>
+      <ul class="changelog-items">
+        <li>Pierwsza publiczna wersja testowa</li>
+        <li>Interaktywna mapa przemienników</li>
+        <li>Ogłoszenia aktywności w czasie rzeczywistym</li>
+        <li>Filtry po trybie, paśmie i kraju</li>
+        <li>Ulubione i eksport CHIRP</li>
+        <li>Obsługa FM, DMR, C4FM, D-STAR, EchoLink, SSB, CW, CB, PMR</li>
+      </ul>
     </div>
   </section>
 
   <!-- INSTALL -->
   <section class="install" id="install">
     <div class="section-label reveal">// instalacja</div>
-    <h2 class="section-title reveal">Jak zainstalować<br>na Android?</h2>
+    <h2 class="section-title reveal">Jak zainstalować<br>z Google Play?</h2>
 
     <div class="install-steps">
       <div class="install-step reveal">
         <div class="step-num">01</div>
         <div class="step-content">
-          <h4>Pobierz plik APK</h4>
-          <p>Kliknij przycisk "Pobierz APK" i zapisz plik na urządzeniu. Android może wyświetlić ostrzeżenie <strong style="color:var(--green);">"plik może być szkodliwy"</strong> — to normalne przy instalacji spoza Google Play. Kliknij <strong>Pobierz mimo to</strong>.</p>
+          <h4>Dołącz do testów</h4>
+          <p>Wejdź w <a href="https://play.google.com/apps/testing/pl.radiomapa.app">link do testów</a> i kliknij "Zostań testerem". To jednorazowa operacja.</p>
         </div>
       </div>
       <div class="install-step reveal">
         <div class="step-num">02</div>
         <div class="step-content">
-          <h4>Zezwól na instalację</h4>
-          <p>Przy pierwszej instalacji Android zapyta o zgodę na instalację z <code>nieznanych źródeł</code>. Zatwierdź jednorazowo.</p>
+          <h4>Pobierz z Google Play</h4>
+          <p>Po dołączeniu do testów aplikacja pojawi się w Google Play. Kliknij "Zainstaluj" tak jak każdą inną aplikację.</p>
         </div>
       </div>
       <div class="install-step reveal">
         <div class="step-num">03</div>
         <div class="step-content">
-          <h4>Zainstaluj i uruchom</h4>
-          <p>Kliknij pobrany plik APK i potwierdź instalację. Przy aktualizacji <strong>nie odinstalowuj</strong> starej wersji — dane zostaną zachowane.</p>
+          <h4>Aktualizacje automatyczne</h4>
+          <p>Nowe wersje będą pojawiać się automatycznie w Google Play. Żadnych ręcznych instalacji APK!</p>
         </div>
       </div>
     </div>
   </section>
 
-
-
   <!-- FOOTER -->
   <footer>
     <div class="footer-logo">Radio<span>Mapa</span></div>
-    <div class="footer-text">© 2025 radiomapa.pl · Dla krótkofalowców</div>
+    <div class="footer-text">© 2026 radiomapa.pl · Dla krótkofalowców</div>
   </footer>
 
   <script>
-    // Scroll reveal
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, i) => {
         if (entry.isIntersecting) {
