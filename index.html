@@ -177,14 +177,6 @@
       animation: fadeUp 0.6s 0.2s ease both;
     }
 
-    .hero-actions {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      justify-content: center;
-      animation: fadeUp 0.6s 0.3s ease both;
-    }
-
     .btn-primary {
       display: inline-flex;
       align-items: center;
@@ -230,16 +222,6 @@
       transform: translateY(-2px);
     }
 
-    .version-info {
-      margin-top: 24px;
-      font-family: 'Space Mono', monospace;
-      font-size: 11px;
-      color: var(--text-dim);
-      letter-spacing: 0.5px;
-      animation: fadeUp 0.6s 0.4s ease both;
-    }
-    .version-info span { color: var(--green); }
-
     .tester-box {
       position: relative;
       z-index: 1;
@@ -263,7 +245,6 @@
       font-size: 14px;
       color: var(--text-sub);
       line-height: 1.7;
-      margin-bottom: 0;
     }
 
     .stats {
@@ -442,6 +423,124 @@
       margin: 0 auto;
     }
 
+    /* KOMENTARZE */
+    .comments-form {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 48px;
+    }
+
+    .comments-form input,
+    .comments-form textarea {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      outline: none;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+
+    .comments-form input:focus,
+    .comments-form textarea:focus {
+      border-color: var(--green);
+    }
+
+    .comments-form input::placeholder,
+    .comments-form textarea::placeholder {
+      color: var(--text-dim);
+    }
+
+    .comments-form button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      background: var(--green);
+      color: #000;
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .comments-form button:hover { background: var(--green-dim); transform: translateY(-1px); }
+    .comments-form button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .comment-item {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .comment-item:last-child { border-bottom: none; }
+
+    .comment-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .comment-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--green-glow);
+      border: 1px solid var(--green-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--green);
+      flex-shrink: 0;
+    }
+
+    .comment-nick {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .comment-date {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-left: auto;
+    }
+
+    .comment-content {
+      font-size: 14px;
+      color: var(--text-sub);
+      line-height: 1.7;
+      padding-left: 48px;
+    }
+
+    .comments-empty {
+      text-align: center;
+      padding: 48px 0;
+      color: var(--text-dim);
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+    }
+
+    .comments-status {
+      font-size: 13px;
+      min-height: 20px;
+    }
+    .comments-status.ok { color: var(--green); }
+    .comments-status.err { color: #ef4444; }
+
     footer {
       position: relative;
       z-index: 1;
@@ -452,18 +551,9 @@
       justify-content: space-between;
     }
 
-    .footer-logo {
-      font-family: 'Space Mono', monospace;
-      font-size: 14px;
-      font-weight: 700;
-    }
+    .footer-logo { font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700; }
     .footer-logo span { color: var(--green); }
-
-    .footer-text {
-      font-size: 12px;
-      color: var(--text-dim);
-      font-family: 'Space Mono', monospace;
-    }
+    .footer-text { font-size: 12px; color: var(--text-dim); font-family: 'Space Mono', monospace; }
 
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(24px); }
@@ -475,17 +565,7 @@
       transform: translateY(32px);
       transition: opacity 0.7s ease, transform 0.7s ease;
     }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Giscus styling */
-    .giscus-wrap {
-      margin-top: 48px;
-      border-top: 1px solid var(--border);
-      padding-top: 48px;
-    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 
     @media (max-width: 768px) {
       nav { padding: 16px 20px; }
@@ -494,9 +574,7 @@
       .hero-orb { width: 300px; height: 300px; }
       h1 { font-size: 38px !important; letter-spacing: -1px; padding: 0 16px; }
       .hero-sub { font-size: 15px; margin: 16px auto 32px; }
-      .hero-actions { flex-direction: column; align-items: center; gap: 12px; }
       .btn-primary, .btn-secondary { width: 100%; max-width: 320px; justify-content: center; padding: 14px 24px; }
-      .version-info { font-size: 10px; }
       .tester-box { padding: 28px 20px; margin: 0 20px; }
       .stats { grid-template-columns: repeat(2, 1fr); margin-top: 20px; }
       .stat { padding: 32px 24px; }
@@ -508,6 +586,7 @@
       .install { padding: 60px 20px; }
       footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px 20px; }
       .changelog-entry { grid-template-columns: 1fr; gap: 8px; }
+      .comment-content { padding-left: 0; }
     }
 
     @media (max-width: 400px) {
@@ -518,7 +597,6 @@
 </head>
 <body>
 
-  <!-- NAV -->
   <nav>
     <div class="nav-logo">Radio<span>Mapa</span></div>
     <ul class="nav-links">
@@ -528,7 +606,6 @@
     </ul>
   </nav>
 
-  <!-- HERO -->
   <section class="hero">
     <div class="hero-orb"></div>
     <div class="hero-badge">Beta · Testy zamknięte</div>
@@ -539,7 +616,6 @@
     </p>
   </section>
 
-  <!-- TESTY -->
   <section class="install" id="testy" style="padding: 20px 40px; max-width: 100%;">
     <div class="tester-box reveal" style="margin: 0 auto;">
       <h3>Testy zamknięte</h3>
@@ -560,27 +636,13 @@
     </div>
   </section>
 
-  <!-- STATS -->
   <div class="stats reveal" style="margin-top: 20px;">
-    <div class="stat">
-      <div class="stat-number">2224</div>
-      <div class="stat-label">Przemienników</div>
-    </div>
-    <div class="stat">
-      <div class="stat-number">649</div>
-      <div class="stat-label">Klubów</div>
-    </div>
-    <div class="stat">
-      <div class="stat-number">16K+</div>
-      <div class="stat-label">Operatorów</div>
-    </div>
-    <div class="stat">
-      <div class="stat-number">100%</div>
-      <div class="stat-label">Darmowa</div>
-    </div>
+    <div class="stat"><div class="stat-number">2224</div><div class="stat-label">Przemienników</div></div>
+    <div class="stat"><div class="stat-number">649</div><div class="stat-label">Klubów</div></div>
+    <div class="stat"><div class="stat-number">16K+</div><div class="stat-label">Operatorów</div></div>
+    <div class="stat"><div class="stat-number">100%</div><div class="stat-label">Darmowa</div></div>
   </div>
 
-  <!-- FEATURES -->
   <section class="features" id="features">
     <div class="section-label reveal">// funkcje</div>
     <h2 class="section-title reveal">Wszystko czego<br>potrzebujesz w terenie</h2>
@@ -618,7 +680,6 @@
     </div>
   </section>
 
-  <!-- CHANGELOG -->
   <section class="changelog" id="changelog">
     <div class="section-label reveal">// changelog</div>
     <h2 class="section-title reveal">Historia<br>wersji</h2>
@@ -671,32 +732,113 @@
   <section class="changelog" id="komentarze">
     <div class="section-label reveal">// komentarze</div>
     <h2 class="section-title reveal">Zostaw<br>komentarz</h2>
-    <div class="giscus-wrap reveal">
-      <script src="https://giscus.app/client.js"
-        data-repo="kiwilot/radiomapa-web"
-        data-repo-id="R_kgDOSARHfA"
-        data-category="General"
-        data-category-id="DIC_kwDOSARHfM4C7jup"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="dark_dimmed"
-        data-lang="pl"
-        crossorigin="anonymous"
-        async>
-      </script>
+
+    <div class="comments-form reveal">
+      <input type="text" id="comment-nick" placeholder="Twój nick / znak wywoławczy" maxlength="50">
+      <textarea id="comment-content" placeholder="Twój komentarz..." rows="4" maxlength="1000"></textarea>
+      <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+        <button id="comment-submit">Wyślij komentarz →</button>
+        <div class="comments-status" id="comments-status"></div>
+      </div>
     </div>
+
+    <div id="comments-list"></div>
   </section>
 
-  <!-- FOOTER -->
   <footer>
     <div class="footer-logo">Radio<span>Mapa</span></div>
     <div class="footer-text">© 2026 radiomapa.pl · Dla krótkofalowców</div>
   </footer>
 
   <script>
+    const SUPABASE_URL = 'https://jggtkvswpbfgykxeyxml.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpnZ3RrdnN3cGJmZ3lreGV5eG1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5NzQxMTksImV4cCI6MjA5MjU1MDExOX0.k_AeJJ-BMDi5zzQ3UHWcE9iMvd9PGcaERcff9tT80M8';
+
+    const headers = {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json'
+    };
+
+    function formatDate(iso) {
+      const d = new Date(iso);
+      return d.toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' })
+        + ' ' + d.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function initials(nick) {
+      return nick.trim().slice(0, 2).toUpperCase();
+    }
+
+    function renderComments(comments) {
+      const list = document.getElementById('comments-list');
+      if (!comments || comments.length === 0) {
+        list.innerHTML = '<div class="comments-empty">// brak komentarzy — bądź pierwszy!</div>';
+        return;
+      }
+      list.innerHTML = comments.map(c => `
+        <div class="comment-item">
+          <div class="comment-header">
+            <div class="comment-avatar">${initials(c.nick)}</div>
+            <div class="comment-nick">${c.nick.replace(/</g,'&lt;')}</div>
+            <div class="comment-date">${formatDate(c.created_at)}</div>
+          </div>
+          <div class="comment-content">${c.content.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+        </div>
+      `).join('');
+    }
+
+    async function loadComments() {
+      try {
+        const res = await fetch(
+          SUPABASE_URL + '/rest/v1/comments?select=*&order=created_at.desc',
+          { headers }
+        );
+        const data = await res.json();
+        renderComments(data);
+      } catch(e) {
+        document.getElementById('comments-list').innerHTML =
+          '<div class="comments-empty">// błąd ładowania komentarzy</div>';
+      }
+    }
+
+    document.getElementById('comment-submit').addEventListener('click', async () => {
+      const nick = document.getElementById('comment-nick').value.trim();
+      const content = document.getElementById('comment-content').value.trim();
+      const status = document.getElementById('comments-status');
+      const btn = document.getElementById('comment-submit');
+
+      if (!nick) { status.textContent = 'Wpisz nick!'; status.className = 'comments-status err'; return; }
+      if (!content) { status.textContent = 'Wpisz komentarz!'; status.className = 'comments-status err'; return; }
+
+      btn.disabled = true;
+      status.textContent = 'Wysyłanie...';
+      status.className = 'comments-status';
+
+      try {
+        const res = await fetch(SUPABASE_URL + '/rest/v1/comments', {
+          method: 'POST',
+          headers: { ...headers, 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ nick, content })
+        });
+
+        if (res.ok) {
+          document.getElementById('comment-nick').value = '';
+          document.getElementById('comment-content').value = '';
+          status.textContent = '✓ Komentarz dodany!';
+          status.className = 'comments-status ok';
+          await loadComments();
+        } else {
+          throw new Error();
+        }
+      } catch(e) {
+        status.textContent = 'Błąd — spróbuj ponownie.';
+        status.className = 'comments-status err';
+      }
+
+      btn.disabled = false;
+    });
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, i) => {
         if (entry.isIntersecting) {
@@ -706,6 +848,8 @@
     }, { threshold: 0.1 });
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    loadComments();
   </script>
 
 </body>
