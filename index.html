@@ -104,7 +104,6 @@
 
     .install { position: relative; z-index: 1; padding: 80px 40px; max-width: 800px; margin: 0 auto; }
 
-    /* KOMENTARZE */
     .comments-form { background: var(--bg2); border: 1px solid var(--border2); border-radius: 12px; padding: 32px; margin-bottom: 48px; }
     .comments-form input, .comments-form textarea { width: 100%; background: var(--bg3); border: 1px solid var(--border2); border-radius: 6px; color: var(--text); font-family: 'Syne', sans-serif; font-size: 14px; padding: 12px 16px; margin-bottom: 12px; outline: none; transition: border-color 0.2s; resize: vertical; }
     .comments-form input:focus, .comments-form textarea:focus { border-color: var(--green); }
@@ -116,16 +115,7 @@
     .comment-item { padding: 24px 0; border-bottom: 1px solid var(--border); }
     .comment-item:last-child { border-bottom: none; }
     .comment-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-
-    /* STATYCZNA ZIELONA KROPKA */
-    .comment-avatar {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--green);
-      flex-shrink: 0;
-    }
-
+    .comment-avatar { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
     .comment-nick { font-weight: 700; font-size: 14px; color: var(--text); }
     .comment-date { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-dim); margin-left: auto; }
     .comment-content { font-size: 14px; color: var(--text-sub); line-height: 1.7; padding-left: 20px; }
@@ -219,7 +209,7 @@
       <div class="feature reveal"><span class="feature-icon">🗺️</span><div class="feature-title">Interaktywna mapa</div><p class="feature-desc">Przemienniki na mapie z grupowaniem, kolorowaniem według trybu pracy i podglądem szczegółów po tapnięciu.</p></div>
       <div class="feature reveal"><span class="feature-icon">📢</span><div class="feature-title">Ogłoszenia aktywności</div><p class="feature-desc">Ogłoś że jesteś na częstotliwości — FM, DMR, C4FM, D-STAR, CB, PMR i więcej. Wszyscy w jednym miejscu, w czasie rzeczywistym.</p></div>
       <div class="feature reveal"><span class="feature-icon">📡</span><div class="feature-title">Pełne dane techniczne</div><p class="feature-desc">TX/RX, CTCSS, Color Code, Timeslot, moduł D-STAR, lokator, tryb pracy, status. Wszystkie parametry w jednym miejscu.</p></div>
-      <div class="feature reveal"><span class="feature-icon">🏛️</span><div class="feature-title">Baza klubów i operatorów</div><p class="feature-desc">649 klubów krótkofalowych z nawigacją i mapą. Ponad 16 000 licencjonowanych operatorów — wyszukaj po znaku lub miejscowości.</p></div>
+      <div class="feature reveal"><span class="feature-icon">🏛️</span><div class="feature-title">Baza klubów i operatorów</div><p class="feature-desc">649 klubów krótkofalarskich z nawigacją i mapą. Ponad 16 000 licencjonowanych operatorów — wyszukaj po znaku lub miejscowości.</p></div>
       <div class="feature reveal"><span class="feature-icon">🔍</span><div class="feature-title">Filtry i wyszukiwanie</div><p class="feature-desc">Filtruj po trybie, paśmie (2m, 70cm, 23cm), kraju, statusie. Znajdź dokładnie to czego szukasz.</p></div>
       <div class="feature reveal"><span class="feature-icon">⭐</span><div class="feature-title">Ulubione i CHIRP</div><p class="feature-desc">Zapisz najczęściej używane przemienniki i eksportuj je do formatu CHIRP — programuj radio jednym kliknięciem.</p></div>
     </div>
@@ -231,7 +221,7 @@
     <div class="changelog-entry reveal">
       <div><div class="changelog-version">v1.2.0</div><div class="changelog-date">kwiecień 2026</div></div>
       <ul class="changelog-items">
-        <li>Nowa sekcja Baza — 649 klubów krótkofalowych z odległością, mapą i nawigacją</li>
+        <li>Nowa sekcja Baza — 649 klubów krótkofalarskich z odległością, mapą i nawigacją</li>
         <li>Baza ponad 16 000 licencjonowanych operatorów z wyszukiwarką</li>
         <li>Przeprojektowany system filtrów — bottom sheet na mapie i liście</li>
         <li>Poprawki UX i usprawnienia interfejsu</li>
