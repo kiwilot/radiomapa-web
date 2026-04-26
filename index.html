@@ -104,27 +104,6 @@
 
     .install { position: relative; z-index: 1; padding: 80px 40px; max-width: 800px; margin: 0 auto; }
 
-    .comments-form { background: var(--bg2); border: 1px solid var(--border2); border-radius: 12px; padding: 32px; margin-bottom: 48px; }
-    .comments-form input, .comments-form textarea { width: 100%; background: var(--bg3); border: 1px solid var(--border2); border-radius: 6px; color: var(--text); font-family: 'Syne', sans-serif; font-size: 14px; padding: 12px 16px; margin-bottom: 12px; outline: none; transition: border-color 0.2s; resize: vertical; }
-    .comments-form input:focus, .comments-form textarea:focus { border-color: var(--green); }
-    .comments-form input::placeholder, .comments-form textarea::placeholder { color: var(--text-dim); }
-    .comments-form button { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; background: var(--green); color: #000; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; border: none; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
-    .comments-form button:hover { background: var(--green-dim); transform: translateY(-1px); }
-    .comments-form button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-    .comment-item { padding: 24px 0; border-bottom: 1px solid var(--border); }
-    .comment-item:last-child { border-bottom: none; }
-    .comment-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-    .comment-avatar { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
-    .comment-nick { font-weight: 700; font-size: 14px; color: var(--text); }
-    .comment-date { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-dim); margin-left: auto; }
-    .comment-content { font-size: 14px; color: var(--text-sub); line-height: 1.7; padding-left: 20px; }
-
-    .comments-empty { text-align: center; padding: 48px 0; color: var(--text-dim); font-family: 'Space Mono', monospace; font-size: 13px; }
-    .comments-status { font-size: 13px; min-height: 20px; }
-    .comments-status.ok { color: var(--green); }
-    .comments-status.err { color: #ef4444; }
-
     footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 32px 40px; display: flex; align-items: center; justify-content: space-between; }
     .footer-logo { font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700; }
     .footer-logo span { color: var(--green); }
@@ -149,7 +128,6 @@
       .install { padding: 60px 20px; }
       footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px 20px; }
       .changelog-entry { grid-template-columns: 1fr; gap: 8px; }
-      .comment-content { padding-left: 0; }
     }
     @media (max-width: 400px) { h1 { font-size: 32px !important; } .stat-number { font-size: 30px; } }
   </style>
@@ -161,7 +139,7 @@
     <ul class="nav-links">
       <li><a href="#features">Funkcje</a></li>
       <li><a href="#testy">Testy</a></li>
-      <li><a href="#komentarze">Komentarze</a></li>
+      <li><a href="#changelog">Changelog</a></li>
     </ul>
   </nav>
 
@@ -251,113 +229,21 @@
     </div>
   </section>
 
-  <!-- KOMENTARZE -->
-  <section class="changelog" id="komentarze">
-    <div class="section-label reveal">// komentarze</div>
-    <h2 class="section-title reveal">Zostaw<br>komentarz</h2>
-
-    <div class="comments-form reveal">
-      <input type="text" id="comment-nick" placeholder="Twój nick / znak " maxlength="50">
-      <textarea id="comment-content" placeholder="Twój komentarz..." rows="4" maxlength="1000"></textarea>
-      <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
-        <button id="comment-submit">Wyślij komentarz →</button>
-        <div class="comments-status" id="comments-status"></div>
-      </div>
-    </div>
-
-    <div id="comments-list"></div>
-  </section>
-
   <footer>
     <div class="footer-logo">Radio<span>Mapa</span></div>
     <div class="footer-text">© 2026 radiomapa.pl · Dla krótkofalowców</div>
   </footer>
 
+  <!-- GoatCounter — zamień TWOJA_NAZWA na nazwę swojego konta -->
+  <script data-goatcounter="https://radiomapa.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
   <script>
-    const SUPABASE_URL = 'https://jggtkvswpbfgykxeyxml.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpnZ3RrdnN3cGJmZ3lreGV5eG1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5NzQxMTksImV4cCI6MjA5MjU1MDExOX0.k_AeJJ-BMDi5zzQ3UHWcE9iMvd9PGcaERcff9tT80M8';
-
-    const headers = {
-      'apikey': SUPABASE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_KEY,
-      'Content-Type': 'application/json'
-    };
-
-    function formatDate(iso) {
-      const d = new Date(iso);
-      return d.toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' })
-        + ' ' + d.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-    }
-
-    function renderComments(comments) {
-      const list = document.getElementById('comments-list');
-      if (!comments || comments.length === 0) {
-        list.innerHTML = '<div class="comments-empty">// brak komentarzy — bądź pierwszy!</div>';
-        return;
-      }
-      list.innerHTML = comments.map(c => `
-        <div class="comment-item">
-          <div class="comment-header">
-            <div class="comment-avatar"></div>
-            <div class="comment-nick">${c.nick.replace(/</g,'&lt;')}</div>
-            <div class="comment-date">${formatDate(c.created_at)}</div>
-          </div>
-          <div class="comment-content">${c.content.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
-        </div>
-      `).join('');
-    }
-
-    async function loadComments() {
-      try {
-        const res = await fetch(SUPABASE_URL + '/rest/v1/comments?select=*&order=created_at.desc', { headers });
-        const data = await res.json();
-        renderComments(data);
-      } catch(e) {
-        document.getElementById('comments-list').innerHTML = '<div class="comments-empty">// błąd ładowania komentarzy</div>';
-      }
-    }
-
-    document.getElementById('comment-submit').addEventListener('click', async () => {
-      const nick = document.getElementById('comment-nick').value.trim();
-      const content = document.getElementById('comment-content').value.trim();
-      const status = document.getElementById('comments-status');
-      const btn = document.getElementById('comment-submit');
-
-      if (!nick) { status.textContent = 'Wpisz nick!'; status.className = 'comments-status err'; return; }
-      if (!content) { status.textContent = 'Wpisz komentarz!'; status.className = 'comments-status err'; return; }
-
-      btn.disabled = true;
-      status.textContent = 'Wysyłanie...';
-      status.className = 'comments-status';
-
-      try {
-        const res = await fetch(SUPABASE_URL + '/rest/v1/comments', {
-          method: 'POST',
-          headers: { ...headers, 'Prefer': 'return=minimal' },
-          body: JSON.stringify({ nick, content })
-        });
-        if (res.ok) {
-          document.getElementById('comment-nick').value = '';
-          document.getElementById('comment-content').value = '';
-          status.textContent = '✓ Komentarz dodany!';
-          status.className = 'comments-status ok';
-          await loadComments();
-        } else { throw new Error(); }
-      } catch(e) {
-        status.textContent = 'Błąd — spróbuj ponownie.';
-        status.className = 'comments-status err';
-      }
-      btn.disabled = false;
-    });
-
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, i) => {
         if (entry.isIntersecting) setTimeout(() => entry.target.classList.add('visible'), i * 80);
       });
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-    loadComments();
   </script>
 
 </body>
