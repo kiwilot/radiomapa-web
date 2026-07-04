@@ -8,6 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" defer></script>
+  <link rel="stylesheet" href="map.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -191,6 +194,7 @@
   <nav>
     <div class="nav-logo">Radio<span>Mapa</span></div>
     <ul class="nav-links">
+      <li><a href="#mapa">Mapa</a></li>
       <li><a href="#features">Funkcje</a></li>
       <li><a href="#pobierz">Pobierz</a></li>
       <li><a href="https://kiwilot.github.io/radiomapa-privacy/">Prywatność</a></li>
@@ -213,7 +217,7 @@
         </svg>
         Pobierz na Android
       </a>
-      <a href="#features" class="btn-secondary">Zobacz funkcje →</a>
+      <a href="#mapa" class="btn-secondary">Zobacz mapę →</a>
     </div>
     <div class="version-tag">Wersja <span>1.0.0</span> · Android 7.0+</div>
   </section>
@@ -225,6 +229,30 @@
     <div class="stat"><div class="stat-number">16K+</div><div class="stat-label">Operatorów</div></div>
     <div class="stat"><div class="stat-number">100%</div><div class="stat-label">Darmowa</div></div>
   </div>
+
+  <!-- MAPA -->
+  <section class="map-section" id="mapa">
+    <div class="map-header reveal">
+      <div>
+        <div class="section-label">// mapa na żywo</div>
+        <h2 class="section-title" style="margin-bottom:0">Ta sama baza,<br>bez instalacji</h2>
+      </div>
+      <div class="map-live" id="mapLive">wczytywanie danych…</div>
+    </div>
+
+    <div class="map-shell reveal">
+      <div id="map"></div>
+      <div class="map-legend">
+        <div class="map-legend-item"><span class="map-legend-dot" style="background:var(--mode-fm)"></span>FM</div>
+        <div class="map-legend-item"><span class="map-legend-dot" style="background:var(--mode-dmr)"></span>DMR</div>
+        <div class="map-legend-item"><span class="map-legend-dot" style="background:var(--mode-dstar)"></span>D-STAR</div>
+        <div class="map-legend-item"><span class="map-legend-dot" style="background:var(--mode-c4fm)"></span>C4FM</div>
+        <div class="map-legend-item"><span class="map-legend-dot" style="background:var(--status-test)"></span>testowy</div>
+        <div class="map-legend-item"><span class="map-legend-dot" style="background:var(--status-off)"></span>wyłączony</div>
+      </div>
+    </div>
+    <p class="map-note">Dane pobierane bezpośrednio z tej samej bazy co aplikacja Android. Kliknij przemiennik po szczegóły — pełne zgłaszanie zmian i ulubione zostają w aplikacji.</p>
+  </section>
 
   <!-- FEATURES -->
   <section class="features" id="features">
@@ -281,6 +309,7 @@
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   </script>
+  <script src="map.js" defer></script>
 
 </body>
 </html>
