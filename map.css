@@ -1,0 +1,90 @@
+/* radiomapa.pl — sekcja mapy na żywo (MapLibre GL JS)
+   Kolory trybów/statusu 1:1 z lib/screens/map/map_colors.dart w apce,
+   żeby mapa na stronie wyglądała identycznie jak w aplikacji Android. */
+
+:root {
+  --mode-fm:     #22c55e;
+  --mode-dmr:    #a78bfa;
+  --mode-dstar:  #fb923c;
+  --mode-c4fm:   #22d3ee;
+  --status-test: #f2a93c;
+  --status-off:  #6b7684;
+}
+
+.map-section { position: relative; z-index: 1; padding: 100px 40px 80px; max-width: 1100px; margin: 0 auto; }
+.map-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 32px; flex-wrap: wrap; }
+.map-live {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-sub);
+  letter-spacing: 0.5px;
+}
+.map-live::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 1.5s ease-in-out infinite; }
+.map-live span { color: var(--green); }
+
+.map-shell {
+  position: relative;
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--bg2);
+}
+#map { width: 100%; height: 620px; }
+
+.map-legend {
+  position: absolute; left: 16px; bottom: 16px; z-index: 2;
+  display: flex; flex-wrap: wrap; gap: 4px 14px;
+  padding: 10px 14px; border-radius: 4px;
+  background: rgba(15,19,23,0.9); border: 1px solid var(--border2);
+  backdrop-filter: blur(4px);
+}
+.map-legend-item { display: flex; align-items: center; gap: 6px; font-family: 'Space Mono', monospace; font-size: 10.5px; color: var(--text-sub); }
+.map-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto; }
+
+.map-note {
+  font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim);
+  margin-top: 14px; line-height: 1.6;
+}
+
+/* MapLibre chrome restyled to match the terminal theme */
+.maplibregl-ctrl-group { background: var(--bg2) !important; border: 1px solid var(--border2) !important; box-shadow: none !important; }
+.maplibregl-ctrl-group button { background: transparent !important; }
+.maplibregl-ctrl-group button + button { border-top: 1px solid var(--border2) !important; }
+.maplibregl-ctrl-icon { filter: invert(1) brightness(1.6); }
+.maplibregl-ctrl-attrib { background: rgba(15,19,23,0.75) !important; font-family: 'Space Mono', monospace; font-size: 10px !important; }
+.maplibregl-ctrl-attrib a { color: var(--text-sub) !important; }
+.maplibregl-popup-content {
+  background: var(--bg2) !important; color: var(--text) !important;
+  border: 1px solid var(--border2); border-radius: 6px; padding: 0 !important;
+  font-family: 'Syne', sans-serif; box-shadow: 0 12px 28px -14px rgba(0,0,0,0.6);
+}
+.maplibregl-popup-close-button { color: var(--text-sub); font-size: 16px; padding: 6px 10px; }
+.maplibregl-popup-close-button:hover { color: var(--green); background: transparent; }
+.maplibregl-popup-anchor-bottom .maplibregl-popup-tip { border-top-color: var(--bg2) !important; }
+.maplibregl-popup-anchor-top .maplibregl-popup-tip { border-bottom-color: var(--bg2) !important; }
+.maplibregl-popup-anchor-left .maplibregl-popup-tip { border-right-color: var(--bg2) !important; }
+.maplibregl-popup-anchor-right .maplibregl-popup-tip { border-left-color: var(--bg2) !important; }
+
+.rm-pop { width: 232px; }
+.rm-pop-head { padding: 12px 14px 10px; border-bottom: 1px solid var(--border2); }
+.rm-pop-call { font-family: 'Space Mono', monospace; font-weight: 700; font-size: 15px; }
+.rm-pop-loc { font-size: 12px; color: var(--text-sub); margin-top: 2px; }
+.rm-pop-badges { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+.rm-pop-pill { font-family: 'Space Mono', monospace; font-size: 9.5px; font-weight: 700; padding: 2px 7px; border-radius: 100px; letter-spacing: 0.3px; text-transform: uppercase; }
+.rm-pop-body { padding: 10px 14px 12px; }
+.rm-pop-row { display: flex; justify-content: space-between; align-items: baseline; padding: 2.5px 0; font-size: 12.5px; }
+.rm-pop-row .k { color: var(--text-sub); }
+.rm-pop-row .v { font-family: 'Space Mono', monospace; font-weight: 700; color: var(--green); }
+.rm-pop-link {
+  display: block; margin-top: 10px; text-align: center;
+  font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
+  color: var(--bg); background: var(--green); text-decoration: none;
+  padding: 8px; border-radius: 4px;
+}
+.rm-pop-link:hover { background: #16a34a; }
+
+@media (max-width: 768px) {
+  .map-section { padding: 60px 20px; }
+  .map-header { align-items: flex-start; }
+  #map { height: 420px; }
+  .map-legend { position: static; margin-top: 12px; width: 100%; }
+}
