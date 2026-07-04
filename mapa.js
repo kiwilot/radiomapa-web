@@ -91,6 +91,7 @@ function toGeoJSON(items) {
     type: 'FeatureCollection',
     features: items.map(r => ({
       type: 'Feature',
+      id: r.id, // wymagane przez setFeatureState (podświetlenie zaznaczenia)
       geometry: { type: 'Point', coordinates: [r.lng, r.lat] },
       properties: { id: r.id, color: repeaterColor(r) },
     })),
@@ -226,8 +227,18 @@ function renderDetail(r) {
   document.getElementById('detailClose').addEventListener('click', closeDetail);
 }
 
+function setMapSelection(id) {
+  if (selectedId != null) {
+    map.setFeatureState({ source: 'repeaters', id: selectedId }, { selected: false });
+  }
+  if (id != null) {
+    map.setFeatureState({ source: 'repeaters', id }, { selected: true });
+  }
+}
+
 function closeDetail() {
   detailPanel.classList.remove('open');
+  setMapSelection(null);
   selectedId = null;
   document.querySelectorAll('.rcard.active').forEach(el => el.classList.remove('active'));
 }
@@ -235,11 +246,12 @@ function closeDetail() {
 function selectRepeater(id, { fly = false } = {}) {
   const r = byId.get(id);
   if (!r) return;
+  setMapSelection(id);
   selectedId = id;
   document.querySelectorAll('.rcard').forEach(el => el.classList.toggle('active', el.dataset.id === id));
   renderDetail(r);
   if (fly && r.hasCoords) {
-    map.flyTo({ center: [r.lng, r.lat], zoom: Math.max(map.getZoom(), 11), essential: true });
+    map.flyTo({ center: [r.lng, r.lat], zoom: Math.max(map.getZoom(), 13), speed: 0.9, curve: 1.3, essential: true });
   }
 }
 
@@ -326,18 +338,26 @@ Promise.all([
     filter: ['!', ['has', 'point_count']],
     paint: {
       'circle-color': ['get', 'color'],
-      'circle-radius': 8,
-      'circle-stroke-width': 2,
-      'circle-stroke-color': '#ffffff',
+      'circle-radius': ['case', ['boolean', ['feature-state', 'selected'], false], 13, 9],
+      'circle-stroke-width': ['case', ['boolean', ['feature-state', 'selected'], false], 3, 2],
+      'circle-stroke-color': ['case', ['boolean', ['feature-state', 'selected'], false], '#2563eb', '#ffffff'],
     },
   });
 
   map.on('click', 'clusters', (e) => {
     const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
     if (!features.length) return;
-    // Prosty, zawsze działający fallback zamiast getClusterExpansionZoom —
-    // ten czasem cichо zawodził (błąd połykany przez `if (err) return`).
-    map.easeTo({ center: features[0].geometry.coordinates, zoom: map.getZoom() + 2 });
+    // flyTo zamiast easeTo — daje ładniejszy, "wciągający" ruch przy rozbijaniu klastra
+    // zamiast prostego, płaskiego przybliżenia. Prosty, zawsze działający fallback
+    // zamiast getClusterExpansionZoom, który czasem cicho zawodził (błąd połykany
+    // przez `if (err) return`).
+    map.flyTo({
+      center: features[0].geometry.coordinates,
+      zoom: map.getZoom() + 2,
+      speed: 0.9,
+      curve: 1.3,
+      essential: true,
+    });
   });
 
   map.on('click', 'unclustered-point', (e) => {
