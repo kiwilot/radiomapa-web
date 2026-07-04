@@ -49,6 +49,43 @@ function freqDisplay(mhz) {
 
 function offsetMhz(tx, rx) { return (Math.round((rx - tx) * 10000) / 10000).toString(); }
 
+// ── Ikony pinów — kształt "łezki" rysowany na canvasie, jeden na kolor ─────────
+
+const PIN_COLORS = ['#16a34a', '#9ca3af', '#d97706', '#7c3aed', '#ea580c', '#0891b2', '#db2777', '#be185d', '#dc2626', '#92400e', '#0284c7'];
+const pinIconId = (hex) => 'pin-' + hex.replace('#', '');
+
+function buildPinImage(color) {
+  const scale = 3; // supersampling pod ekrany HiDPI
+  const w = 26, h = 34;
+  const r = 9;
+  const cx = w / 2, cy = r + 3;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = w * scale;
+  canvas.height = h * scale;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(scale, scale);
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, Math.PI, 2 * Math.PI);
+  ctx.quadraticCurveTo(cx + r, cy + r * 1.4, cx, h - 2);
+  ctx.quadraticCurveTo(cx - r, cy + r * 1.4, cx - r, cy);
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = '#ffffff';
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, r * 0.38, 0, Math.PI * 2);
+  ctx.fillStyle = '#ffffff';
+  ctx.fill();
+
+  const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  return { width: canvas.width, height: canvas.height, data: imgData.data, pixelRatio: scale };
+}
+
 function formatDate(iso) {
   const d = new Date(iso);
   if (isNaN(d)) return iso;
@@ -93,7 +130,7 @@ function toGeoJSON(items) {
       type: 'Feature',
       id: r.id, // wymagane przez setFeatureState (podświetlenie zaznaczenia)
       geometry: { type: 'Point', coordinates: [r.lng, r.lat] },
-      properties: { id: r.id, color: repeaterColor(r) },
+      properties: { id: r.id, color: repeaterColor(r), icon: pinIconId(repeaterColor(r)) },
     })),
   };
 }
@@ -295,6 +332,11 @@ Promise.all([
   loadRepeaters(),
   new Promise(resolve => map.on('load', resolve)),
 ]).then(() => {
+  for (const color of PIN_COLORS) {
+    const img = buildPinImage(color);
+    if (!map.hasImage(pinIconId(color))) map.addImage(pinIconId(color), img, { pixelRatio: img.pixelRatio });
+  }
+
   map.addSource('repeaters', {
     type: 'geojson',
     data: toGeoJSON(ALL.filter(r => r.hasCoords)),
@@ -333,14 +375,15 @@ Promise.all([
 
   map.addLayer({
     id: 'unclustered-point',
-    type: 'circle',
+    type: 'symbol',
     source: 'repeaters',
     filter: ['!', ['has', 'point_count']],
-    paint: {
-      'circle-color': ['get', 'color'],
-      'circle-radius': ['case', ['boolean', ['feature-state', 'selected'], false], 13, 9],
-      'circle-stroke-width': ['case', ['boolean', ['feature-state', 'selected'], false], 3, 2],
-      'circle-stroke-color': ['case', ['boolean', ['feature-state', 'selected'], false], '#2563eb', '#ffffff'],
+    layout: {
+      'icon-image': ['get', 'icon'],
+      'icon-size': ['case', ['boolean', ['feature-state', 'selected'], false], 1.55, 1.15],
+      'icon-anchor': 'bottom',
+      'icon-allow-overlap': true,
+      'icon-ignore-placement': true,
     },
   });
 
