@@ -51,6 +51,9 @@
     --cyan-bg: #0e3138;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 28px -14px rgba(0, 0, 0, 0.6);
   }
+  /* Domyślne ikony +/- MapLibre są ciemne — na ciemnym tle przycisku
+     (var(--panel) w trybie dark) stają się prawie niewidoczne. */
+  .maplibregl-ctrl-icon { filter: invert(1) brightness(1.6); }
 }
 
 * { box-sizing: border-box; }

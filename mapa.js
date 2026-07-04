@@ -326,7 +326,7 @@ Promise.all([
     filter: ['!', ['has', 'point_count']],
     paint: {
       'circle-color': ['get', 'color'],
-      'circle-radius': 6,
+      'circle-radius': 8,
       'circle-stroke-width': 2,
       'circle-stroke-color': '#ffffff',
     },
@@ -334,17 +334,14 @@ Promise.all([
 
   map.on('click', 'clusters', (e) => {
     const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
-    const clusterId = features[0].properties.cluster_id;
-    map.getSource('repeaters').getClusterExpansionZoom(clusterId, (err, zoom) => {
-      if (err) return;
-      map.easeTo({ center: features[0].geometry.coordinates, zoom });
-    });
+    if (!features.length) return;
+    // Prosty, zawsze działający fallback zamiast getClusterExpansionZoom —
+    // ten czasem cichо zawodził (błąd połykany przez `if (err) return`).
+    map.easeTo({ center: features[0].geometry.coordinates, zoom: map.getZoom() + 2 });
   });
 
   map.on('click', 'unclustered-point', (e) => {
     selectRepeater(e.features[0].properties.id, { fly: false });
-    const card = document.querySelector(`.rcard[data-id="${e.features[0].properties.id}"]`);
-    if (card) card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   });
 
   map.on('mouseenter', 'unclustered-point', () => map.getCanvas().style.cursor = 'pointer');
