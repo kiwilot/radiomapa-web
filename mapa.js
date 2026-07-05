@@ -133,7 +133,7 @@ function toGeoJSON(items) {
     type: 'FeatureCollection',
     features: items.map(r => ({
       type: 'Feature',
-      id: r.id, // wymagane przez setFeatureState (podświetlenie zaznaczenia)
+      id: r.id,
       geometry: { type: 'Point', coordinates: [r.lng, r.lat] },
       properties: { id: r.id, color: repeaterColor(r), icon: pinIconId(repeaterColor(r)) },
     })),
@@ -270,12 +270,15 @@ function renderDetail(r) {
 }
 
 function setMapSelection(id) {
-  if (selectedId != null) {
-    map.setFeatureState({ source: 'repeaters', id: selectedId }, { selected: false });
-  }
-  if (id != null) {
-    map.setFeatureState({ source: 'repeaters', id }, { selected: true });
-  }
+  // `feature-state` nie działa we właściwościach layout (icon-size/icon-image),
+  // więc podświetlenie robimy przez osobne, statycznie stylowane źródło z co
+  // najwyżej jedną cechą (zaznaczonym punktem), zamiast per-cecha stanu.
+  const src = map.getSource('selected-point');
+  if (!src) return;
+  const r = id != null ? byId.get(id) : null;
+  src.setData(r && r.hasCoords
+    ? { type: 'FeatureCollection', features: [{ type: 'Feature', geometry: { type: 'Point', coordinates: [r.lng, r.lat] }, properties: {} }] }
+    : { type: 'FeatureCollection', features: [] });
 }
 
 function closeDetail() {
@@ -400,6 +403,21 @@ Promise.all([
     },
   });
 
+  // Podświetlenie zaznaczonego przemiennika — osobne źródło z co najwyżej jedną
+  // cechą, aktualizowane w setMapSelection(). Rysowane pod ikoną pina.
+  map.addSource('selected-point', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+  map.addLayer({
+    id: 'selected-point-ring',
+    type: 'circle',
+    source: 'selected-point',
+    paint: {
+      'circle-radius': 18,
+      'circle-color': 'rgba(37, 99, 235, 0.18)',
+      'circle-stroke-width': 3,
+      'circle-stroke-color': '#2563eb',
+    },
+  });
+
   map.addLayer({
     id: 'unclustered-point',
     type: 'symbol',
@@ -407,7 +425,7 @@ Promise.all([
     filter: ['!', ['has', 'point_count']],
     layout: {
       'icon-image': ['get', 'icon'],
-      'icon-size': ['case', ['boolean', ['feature-state', 'selected'], false], 1.55, 1.15],
+      'icon-size': 1.25,
       'icon-anchor': 'bottom',
       'icon-allow-overlap': true,
       'icon-ignore-placement': true,
@@ -430,12 +448,15 @@ Promise.all([
     });
   });
 
-  map.on('click', 'unclustered-point', (e) => {
-    selectRepeater(e.features[0].properties.id, { fly: false });
-  });
-
-  map.on('mouseenter', 'unclustered-point', () => map.getCanvas().style.cursor = 'pointer');
-  map.on('mouseleave', 'unclustered-point', () => map.getCanvas().style.cursor = '');
+  // Podpięte pod OBIE warstwy (ikona + fallback) — działa niezależnie od tego,
+  // czy ikona się wczytała, czy widoczna jest tylko kropka zapasowa.
+  for (const layerId of ['unclustered-point', 'unclustered-point-fallback']) {
+    map.on('click', layerId, (e) => {
+      selectRepeater(e.features[0].properties.id, { fly: false });
+    });
+    map.on('mouseenter', layerId, () => map.getCanvas().style.cursor = 'pointer');
+    map.on('mouseleave', layerId, () => map.getCanvas().style.cursor = '');
+  }
   map.on('mouseenter', 'clusters', () => map.getCanvas().style.cursor = 'pointer');
   map.on('mouseleave', 'clusters', () => map.getCanvas().style.cursor = '');
 
