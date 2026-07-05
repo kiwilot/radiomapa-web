@@ -83,7 +83,12 @@ function buildPinImage(color) {
   ctx.fill();
 
   const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  return { width: canvas.width, height: canvas.height, data: imgData.data, pixelRatio: scale };
+  return {
+    width: canvas.width,
+    height: canvas.height,
+    data: new Uint8Array(imgData.data.buffer),
+    pixelRatio: scale,
+  };
 }
 
 function formatDate(iso) {
@@ -333,8 +338,15 @@ Promise.all([
   new Promise(resolve => map.on('load', resolve)),
 ]).then(() => {
   for (const color of PIN_COLORS) {
-    const img = buildPinImage(color);
-    if (!map.hasImage(pinIconId(color))) map.addImage(pinIconId(color), img, { pixelRatio: img.pixelRatio });
+    try {
+      const img = buildPinImage(color);
+      const id = pinIconId(color);
+      if (!map.hasImage(id)) {
+        map.addImage(id, { width: img.width, height: img.height, data: img.data }, { pixelRatio: img.pixelRatio });
+      }
+    } catch (err) {
+      console.error('RadioMapa: nie udało się dodać ikony pina', color, err);
+    }
   }
 
   map.addSource('repeaters', {
@@ -371,6 +383,21 @@ Promise.all([
       'text-size': 12,
     },
     paint: { 'text-color': '#ffffff' },
+  });
+
+  // Siatka bezpieczeństwa: mała kropka pod ikoną, żeby punkt nigdy nie był
+  // całkiem niewidoczny, nawet gdyby ikona (addImage) z jakiegoś powodu zawiodła.
+  map.addLayer({
+    id: 'unclustered-point-fallback',
+    type: 'circle',
+    source: 'repeaters',
+    filter: ['!', ['has', 'point_count']],
+    paint: {
+      'circle-color': ['get', 'color'],
+      'circle-radius': 5,
+      'circle-stroke-width': 1.5,
+      'circle-stroke-color': '#ffffff',
+    },
   });
 
   map.addLayer({
