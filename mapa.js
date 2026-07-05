@@ -59,6 +59,7 @@ function buildPinImage(color) {
   const w = 26, h = 34;
   const r = 9;
   const cx = w / 2, cy = r + 3;
+  const tipY = cy + r * 1.7; // krótszy, tępszy "ogon" niż klasyczna łezka — balonik
 
   const canvas = document.createElement('canvas');
   canvas.width = w * scale;
@@ -66,10 +67,17 @@ function buildPinImage(color) {
   const ctx = canvas.getContext('2d');
   ctx.scale(scale, scale);
 
+  // Cień pod baloniku
+  ctx.beginPath();
+  ctx.ellipse(cx, tipY + 2, 4, 1.3, 0, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+  ctx.fill();
+
+  // Ciało pina — zaokrąglony balonik
   ctx.beginPath();
   ctx.arc(cx, cy, r, Math.PI, 2 * Math.PI);
-  ctx.quadraticCurveTo(cx + r, cy + r * 1.4, cx, h - 2);
-  ctx.quadraticCurveTo(cx - r, cy + r * 1.4, cx - r, cy);
+  ctx.quadraticCurveTo(cx + r, cy + r * 1.05, cx, tipY);
+  ctx.quadraticCurveTo(cx - r, cy + r * 1.05, cx - r, cy);
   ctx.closePath();
   ctx.fillStyle = color;
   ctx.fill();
@@ -77,8 +85,19 @@ function buildPinImage(color) {
   ctx.strokeStyle = '#ffffff';
   ctx.stroke();
 
+  // Fala sygnału zamiast kropki
+  const gx = cx, gy = cy + 7;
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineCap = 'round';
+  ctx.lineWidth = 1.7;
   ctx.beginPath();
-  ctx.arc(cx, cy, r * 0.38, 0, Math.PI * 2);
+  ctx.arc(gx, gy, 3.4, Math.PI * 1.15, Math.PI * 1.85);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(gx, gy, 5.8, Math.PI * 1.2, Math.PI * 1.8);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(gx, gy, 1.3, 0, Math.PI * 2);
   ctx.fillStyle = '#ffffff';
   ctx.fill();
 
