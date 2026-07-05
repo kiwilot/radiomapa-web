@@ -54,6 +54,10 @@ function offsetMhz(tx, rx) { return (Math.round((rx - tx) * 10000) / 10000).toSt
 const PIN_COLORS = ['#16a34a', '#9ca3af', '#d97706', '#7c3aed', '#ea580c', '#0891b2', '#db2777', '#be185d', '#dc2626', '#92400e', '#0284c7'];
 const pinIconId = (hex) => 'pin-' + hex.replace('#', '');
 
+// Ikona anteny/sygnału (viewBox 24x24), podana przez użytkownika.
+const ANTENNA_PATH_1 = "M12 8c-1.1 0-2 .9-2 2c0 .85.53 1.57 1.28 1.86l-.53 10.13h2.5l-.53-10.13C13.47 11.57 14 10.85 14 10c0-1.1-.9-2-2-2m-2.83-.83L7.76 5.75A5.97 5.97 0 0 0 6 9.99c0 1.6.62 3.11 1.76 4.25l1.41-1.41A3.96 3.96 0 0 1 8 10c0-1.07.42-2.07 1.17-2.82Zm7.07-1.41l-1.41 1.41C15.59 7.93 16 8.93 16 10s-.42 2.07-1.17 2.83l1.41 1.41C17.37 13.11 18 11.6 18 10s-.62-3.11-1.76-4.24";
+const ANTENNA_PATH_2 = "M6.34 4.34L4.93 2.92C3.04 4.81 2 7.32 2 9.99s1.04 5.18 2.93 7.07l1.41-1.41c-1.51-1.51-2.35-3.52-2.35-5.66s.83-4.15 2.34-5.65Zm11.32 0c3.12 3.12 3.12 8.2 0 11.31l1.41 1.41c3.9-3.9 3.9-10.24 0-14.14l-1.41 1.41Z";
+
 function buildPinImage(color) {
   const scale = 3; // supersampling pod ekrany HiDPI
   const w = 26, h = 34;
@@ -85,21 +89,15 @@ function buildPinImage(color) {
   ctx.strokeStyle = '#ffffff';
   ctx.stroke();
 
-  // Fala sygnału zamiast kropki
-  const gx = cx, gy = cy + 7;
-  ctx.strokeStyle = '#ffffff';
-  ctx.lineCap = 'round';
-  ctx.lineWidth = 1.7;
-  ctx.beginPath();
-  ctx.arc(gx, gy, 3.4, Math.PI * 1.15, Math.PI * 1.85);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.arc(gx, gy, 5.8, Math.PI * 1.2, Math.PI * 1.8);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.arc(gx, gy, 1.3, 0, Math.PI * 2);
+  // Ikona anteny/sygnału zamiast kropki (viewBox 24x24, wyśrodkowana w głowicy)
+  ctx.save();
+  ctx.translate(cx, cy + 1);
+  ctx.scale(0.62, 0.62);
+  ctx.translate(-12, -11);
   ctx.fillStyle = '#ffffff';
-  ctx.fill();
+  ctx.fill(new Path2D(ANTENNA_PATH_1));
+  ctx.fill(new Path2D(ANTENNA_PATH_2));
+  ctx.restore();
 
   const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   return {
