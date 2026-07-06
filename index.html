@@ -15,13 +15,13 @@
   <meta property="og:url" content="https://radiomapa.pl/">
   <meta property="og:title" content="RadioMapa — Baza przemienników krótkofalowych">
   <meta property="og:description" content="Interaktywna mapa przemienników krótkofalowych dla Polski i Europy. Baza klubów i operatorów krótkofalowych. Pobierz aplikację na Android.">
-  <meta property="og:image" content="https://radiomapa.pl/img/mapa-przemiennikow-krotkofalowych.png">
+  <meta property="og:image" content="https://radiomapa.pl/img/mapa-przemiennikow-krotkofalowych.jpg">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="RadioMapa — Baza przemienników krótkofalowych">
   <meta name="twitter:description" content="Interaktywna mapa przemienników krótkofalowych dla Polski i Europy. Baza klubów i operatorów krótkofalowych.">
-  <meta name="twitter:image" content="https://radiomapa.pl/img/mapa-przemiennikow-krotkofalowych.png">
+  <meta name="twitter:image" content="https://radiomapa.pl/img/mapa-przemiennikow-krotkofalowych.jpg">
 
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230a0d0f'/%3E%3Ccircle cx='50' cy='50' r='28' fill='none' stroke='%2322c55e' stroke-width='8'/%3E%3Ccircle cx='50' cy='50' r='8' fill='%2322c55e'/%3E%3C/svg%3E">
 
@@ -118,12 +118,6 @@
     h1 { font-size: clamp(48px, 10vw, 120px); font-weight: 800; line-height: 0.95; letter-spacing: -3px; margin-bottom: 8px; animation: fadeUp 0.6s 0.1s ease both; }
     h1 .accent { color: var(--green); }
 
-    .hero-kicker {
-      font-family: 'Space Mono', monospace; font-size: clamp(13px, 2vw, 15px);
-      color: var(--green); letter-spacing: 0.5px; margin-top: 4px;
-      animation: fadeUp 0.6s 0.15s ease both;
-    }
-
     .hero-sub {
       font-size: clamp(15px, 2vw, 18px); color: var(--text-sub);
       max-width: 500px; line-height: 1.6; margin: 24px auto 40px;
@@ -152,12 +146,6 @@
       transition: all 0.2s; letter-spacing: 0.3px;
     }
     .btn-secondary:hover { border-color: var(--green); color: var(--green); transform: translateY(-2px); }
-
-    .version-tag {
-      margin-top: 24px; font-family: 'Space Mono', monospace; font-size: 11px;
-      color: var(--text-dim); animation: fadeUp 0.6s 0.4s ease both;
-    }
-    .version-tag span { color: var(--green); }
 
     /* ── STATS ── */
     .stats {
@@ -211,8 +199,6 @@
       padding: 100px 40px; text-align: center;
       border-top: 1px solid var(--border);
     }
-    .cta h2 { font-size: clamp(32px, 5vw, 64px); font-weight: 800; letter-spacing: -2px; line-height: 1.1; margin-bottom: 16px; }
-    .cta p { font-size: 16px; color: var(--text-sub); margin-bottom: 40px; }
     .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
     /* ── FOOTER ── */
@@ -269,7 +255,6 @@
   <section class="hero">
     <div class="hero-orb"></div>
     <h1>Radio<span class="accent">Mapa</span></h1>
-    <div class="hero-kicker">Baza przemienników krótkofalowych</div>
     <p class="hero-sub">
       Interaktywna mapa przemienników krótkofalowych dla Polski i Europy.
       Baza klubów i operatorów krótkofalowych.
@@ -282,7 +267,6 @@
         Pobierz na Android
       </a>
     </div>
-    <div class="version-tag">Wersja <span>1.1.0</span> · Android 7.0+</div>
   </section>
 
   <!-- STATS -->
@@ -293,18 +277,11 @@
     <div class="stat"><div class="stat-number">100%</div><div class="stat-label">Darmowa</div></div>
   </div>
 
-  <!-- ABOUT / SEO copy -->
-  <section class="about" id="przemienniki">
-    <h2 class="reveal">Czym są przemienniki krótkofalowe?</h2>
-    <p class="reveal"><strong>Przemiennik</strong> (retransmiter) to stacja radiowa, która odbiera sygnał na jednej częstotliwości i automatycznie retransmituje go na innej, znacznie zwiększając zasięg łączności krótkofalowej. Przemienniki krótkofalowe pracują najczęściej w pasmach <strong>2m (144 MHz)</strong>, <strong>70cm (430 MHz)</strong> i <strong>23cm</strong>, w trybach FM, DMR, D-STAR, C4FM (Fusion) czy P25.</p>
-    <p class="reveal">RadioMapa zbiera w jednym miejscu aktualną bazę przemienników krótkofalowych w Polsce i Europie — z parametrami TX/RX, CTCSS, Color Code, lokatorem i statusem pracy — oraz pokazuje je na interaktywnej mapie z podziałem na pasma i tryby modulacji.</p>
-  </section>
-
   <!-- SCREENSHOTS -->
   <section class="screens reveal">
     <div class="screens-grid">
       <figure>
-        <img src="img/mapa-przemiennikow-krotkofalowych.png" alt="Mapa przemienników krótkofalowych w aplikacji RadioMapa" loading="lazy" width="973" height="2062">
+        <img src="img/mapa-przemiennikow-krotkofalowych.jpg" alt="Mapa przemienników krótkofalowych w aplikacji RadioMapa" loading="lazy" width="700" height="1483">
         <figcaption>Mapa przemienników</figcaption>
       </figure>
       <figure>
@@ -362,8 +339,6 @@
 
   <!-- CTA -->
   <section class="cta" id="pobierz">
-    <h2>Pobierz <span style="color:var(--green)">RadioMapa</span></h2>
-    <p>Darmowa aplikacja z bazą przemienników krótkofalowych na Androida.</p>
     <div class="cta-buttons">
       <a href="https://play.google.com/store/apps/details?id=pl.radiomapa.app" class="btn-primary">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -372,6 +347,13 @@
         Pobierz na Android
       </a>
     </div>
+  </section>
+
+  <!-- ABOUT / SEO copy -->
+  <section class="about" id="przemienniki">
+    <h2 class="reveal">Czym są przemienniki krótkofalowe?</h2>
+    <p class="reveal"><strong>Przemiennik</strong> (retransmiter) to stacja radiowa, która odbiera sygnał na jednej częstotliwości i automatycznie retransmituje go na innej, znacznie zwiększając zasięg łączności krótkofalowej. Przemienniki krótkofalowe pracują najczęściej w pasmach <strong>2m (144 MHz)</strong>, <strong>70cm (430 MHz)</strong> i <strong>23cm</strong>, w trybach FM, DMR, D-STAR, C4FM (Fusion) czy P25.</p>
+    <p class="reveal">RadioMapa zbiera w jednym miejscu aktualną bazę przemienników krótkofalowych w Polsce i Europie — z parametrami TX/RX, CTCSS, Color Code, lokatorem i statusem pracy — oraz pokazuje je na interaktywnej mapie z podziałem na pasma i tryby modulacji.</p>
   </section>
 
   <footer>
