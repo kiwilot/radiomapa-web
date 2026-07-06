@@ -174,10 +174,31 @@
     .screens-grid img {
       width: 100%; display: block; border-radius: 12px;
       border: 1px solid var(--border2); background: var(--bg2);
+      cursor: zoom-in; transition: border-color 0.2s, transform 0.2s;
     }
+    .screens-grid img:hover { border-color: var(--green); transform: translateY(-2px); }
     .screens-grid figcaption {
       margin-top: 10px; font-size: 12px; color: var(--text-sub); text-align: center;
     }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(10,13,15,0.92); backdrop-filter: blur(4px);
+      display: none; align-items: center; justify-content: center;
+      padding: 40px 20px; cursor: zoom-out;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img {
+      max-width: min(90vw, 500px); max-height: 90vh;
+      border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .lightbox-close {
+      position: absolute; top: 20px; right: 28px;
+      font-family: 'Space Mono', monospace; font-size: 28px; line-height: 1;
+      color: var(--text-sub); background: none; border: none; cursor: pointer;
+    }
+    .lightbox-close:hover { color: var(--green); }
 
     /* ── FEATURES ── */
     .features { position: relative; z-index: 1; padding: 100px 40px; max-width: 1100px; margin: 0 auto; }
@@ -281,23 +302,29 @@
   <section class="screens reveal">
     <div class="screens-grid">
       <figure>
-        <img src="img/mapa-przemiennikow-krotkofalowych.jpg" alt="Mapa przemienników krótkofalowych w aplikacji RadioMapa" loading="lazy" width="700" height="1483">
+        <img src="img/thumb/mapa-przemiennikow-krotkofalowych.jpg" data-full="img/mapa-przemiennikow-krotkofalowych.jpg" alt="Mapa przemienników krótkofalowych w aplikacji RadioMapa" loading="lazy" width="420" height="890">
         <figcaption>Mapa przemienników</figcaption>
       </figure>
       <figure>
-        <img src="img/lista-przemiennikow.png" alt="Lista przemienników krótkofalowych z parametrami TX/RX" loading="lazy" width="1080" height="2272">
+        <img src="img/thumb/lista-przemiennikow.jpg" data-full="img/lista-przemiennikow.jpg" alt="Lista przemienników krótkofalowych z parametrami TX/RX" loading="lazy" width="420" height="884">
         <figcaption>Lista przemienników</figcaption>
       </figure>
       <figure>
-        <img src="img/baza-operatorow-krotkofalowych.png" alt="Baza operatorów krótkofalowych — wyszukiwarka znaków wywoławczych" loading="lazy" width="1080" height="2281">
+        <img src="img/thumb/baza-operatorow-krotkofalowych.jpg" data-full="img/baza-operatorow-krotkofalowych.jpg" alt="Baza operatorów krótkofalowych — wyszukiwarka znaków wywoławczych" loading="lazy" width="420" height="887">
         <figcaption>Baza operatorów</figcaption>
       </figure>
       <figure>
-        <img src="img/propagacja.png" alt="Wskaźniki propagacji fal radiowych — Solar Flux, K-index, pasma HF" loading="lazy" width="1080" height="2284">
+        <img src="img/thumb/propagacja.jpg" data-full="img/propagacja.jpg" alt="Wskaźniki propagacji fal radiowych — Solar Flux, K-index, pasma HF" loading="lazy" width="420" height="888">
         <figcaption>Propagacja HF</figcaption>
       </figure>
     </div>
   </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" aria-label="Zamknij">&times;</button>
+    <img id="lightbox-img" src="" alt="">
+  </div>
 
   <!-- FEATURES -->
   <section class="features" id="features">
@@ -372,6 +399,27 @@
       });
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+
+    function openLightbox(src, alt) {
+      lightboxImg.src = src;
+      lightboxImg.alt = alt;
+      lightbox.classList.add('open');
+    }
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      lightboxImg.src = '';
+    }
+
+    document.querySelectorAll('.screens-grid img').forEach(img => {
+      img.addEventListener('click', () => openLightbox(img.dataset.full, img.alt));
+    });
+    lightbox.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeLightbox();
+    });
   </script>
 
 </body>
