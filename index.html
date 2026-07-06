@@ -160,7 +160,7 @@
     .stat-label { font-size: 13px; color: var(--text-sub); margin-top: 8px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; }
 
     /* ── ABOUT (SEO copy) ── */
-    .about { position: relative; z-index: 1; padding: 100px 40px 40px; max-width: 800px; margin: 0 auto; }
+    .about { position: relative; z-index: 1; padding: 20px 40px 60px; max-width: 800px; margin: 0 auto; }
     .about h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 24px; }
     .about p { font-size: 15px; color: var(--text-sub); line-height: 1.8; margin-bottom: 16px; }
     .about p strong { color: var(--text); font-weight: 600; }
@@ -194,6 +194,7 @@
     .lightbox img {
       max-width: min(90vw, 500px); max-height: 90vh;
       border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      cursor: default; touch-action: pan-y;
     }
     .lightbox-close {
       position: absolute; top: 20px; right: 28px;
@@ -201,6 +202,18 @@
       color: var(--text-sub); background: none; border: none; cursor: pointer;
     }
     .lightbox-close:hover { color: var(--green); }
+    .lightbox-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      font-family: 'Space Mono', monospace; font-size: 36px; line-height: 1;
+      color: var(--text-sub); background: none; border: none; cursor: pointer;
+      padding: 12px;
+    }
+    .lightbox-nav:hover { color: var(--green); }
+    .lightbox-prev { left: 4px; }
+    .lightbox-next { right: 4px; }
+    @media (max-width: 600px) {
+      .lightbox-nav { font-size: 26px; padding: 8px; }
+    }
 
     /* ── FEATURES ── */
     .features { position: relative; z-index: 1; padding: 100px 40px; max-width: 1100px; margin: 0 auto; }
@@ -241,7 +254,7 @@
       .btn-primary, .btn-secondary { width: 100%; max-width: 320px; justify-content: center; padding: 14px 24px; }
       .stats { grid-template-columns: repeat(2, 1fr); }
       .stat { padding: 32px 24px; } .stat-number { font-size: 36px; }
-      .about { padding: 60px 20px 20px; }
+      .about { padding: 12px 20px 40px; }
       .screens { padding: 20px 20px 60px; }
       .screens-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
       .features { padding: 60px 20px; }
@@ -316,7 +329,9 @@
   <!-- LIGHTBOX -->
   <div class="lightbox" id="lightbox">
     <button class="lightbox-close" aria-label="Zamknij">&times;</button>
+    <button class="lightbox-nav lightbox-prev" aria-label="Poprzedni">&#8249;</button>
     <img id="lightbox-img" src="" alt="">
+    <button class="lightbox-nav lightbox-next" aria-label="Następny">&#8250;</button>
   </div>
 
   <!-- FEATURES -->
@@ -383,10 +398,17 @@
 
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
+    const slides = Array.from(document.querySelectorAll('.screens-grid img'))
+      .map(img => ({ src: img.dataset.full, alt: img.alt }));
+    let slideIndex = 0;
 
-    function openLightbox(src, alt) {
-      lightboxImg.src = src;
-      lightboxImg.alt = alt;
+    function showSlide(i) {
+      slideIndex = (i + slides.length) % slides.length;
+      lightboxImg.src = slides[slideIndex].src;
+      lightboxImg.alt = slides[slideIndex].alt;
+    }
+    function openLightbox(i) {
+      showSlide(i);
       lightbox.classList.add('open');
     }
     function closeLightbox() {
@@ -394,13 +416,38 @@
       lightboxImg.src = '';
     }
 
-    document.querySelectorAll('.screens-grid img').forEach(img => {
-      img.addEventListener('click', () => openLightbox(img.dataset.full, img.alt));
+    document.querySelectorAll('.screens-grid img').forEach((img, i) => {
+      img.addEventListener('click', () => openLightbox(i));
     });
-    lightbox.addEventListener('click', closeLightbox);
+    document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    document.querySelector('.lightbox-prev').addEventListener('click', e => {
+      e.stopPropagation();
+      showSlide(slideIndex - 1);
+    });
+    document.querySelector('.lightbox-next').addEventListener('click', e => {
+      e.stopPropagation();
+      showSlide(slideIndex + 1);
+    });
+    lightbox.addEventListener('click', e => {
+      if (e.target === lightbox) closeLightbox();
+    });
     document.addEventListener('keydown', e => {
+      if (!lightbox.classList.contains('open')) return;
       if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') showSlide(slideIndex + 1);
+      if (e.key === 'ArrowLeft') showSlide(slideIndex - 1);
     });
+
+    let touchStartX = 0;
+    lightbox.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    lightbox.addEventListener('touchend', e => {
+      const diff = e.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(diff) > 40) {
+        diff < 0 ? showSlide(slideIndex + 1) : showSlide(slideIndex - 1);
+      }
+    }, { passive: true });
   </script>
 
 </body>
